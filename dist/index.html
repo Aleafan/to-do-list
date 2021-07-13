@@ -6,11 +6,84 @@
 
     <title>To Do List</title>
 
+    <link href="../src/styles/normalize.css" rel="stylesheet">
+		<link href="../src/styles/style.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
+
     <script src="https://kit.fontawesome.com/3568576df5.js" crossorigin="anonymous"></script>
 
     <script src='./main.js' defer></script>
   </head>
+
   <body>
-    <div id="content"></div>
+    <header>
+      <h1>TO DO List</h1>
+    </header>
+    <main>
+      <div id='nav-menu'>
+        <ul id='nav-timeline'>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>Today</span>
+              <span>4</span>
+            </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>This week</span>
+              <span>8</span>
+            </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>All tasks</span>
+              <span>15</span>
+            </button>
+          </li>
+        </ul>
+        <ul id='nav-projects'>
+          <h2>Projects</h2>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>Vacation in Rome</span>
+              <span>6</span>
+          </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>Exercise</span>
+              <span>3</span>
+            </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>Health</span>
+              <span>4</span>
+            </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-flex' type='button'>
+              <span>House</span>
+              <span>3</span>
+            </button>
+          </li>
+          <li>
+            <button class='btn-menu btn-add' type='button'>
+              <i class="fas fa-plus"></i>
+              Add project
+            </button>
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <!-- <div id="content"></div> -->
   </body>
 </html>

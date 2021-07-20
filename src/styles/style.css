@@ -1,63 +1,253 @@
+/* Variables declarations */
+:root {
+  --header-height: 55px;
+}
+
 /* Global rules */
 * {
   box-sizing: border-box;
 }
+
 html, body {
   height: 100%;
 }
+
 body {
   font-family: 'Roboto', sans-serif;
 }
 
-/* Main menu */
-header {
-  background-color: lightgrey;
-  padding: 1rem 0.5rem;
-}
-h1 {
+h1, h2 {
   margin: 0;
+  font-size: 1.8rem;
 }
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Main menu */
+@media (min-width: 750px) {
+  body {
+    padding-left: 300px;
+    transition: all 0.4s ease-out; 
+  }
+}
+
+#app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--header-height, 55px);
+  color: white;
+  background-color: darkblue;
+  padding: 0 1rem;
+  z-index: 2;
+}
+@media (min-width: 750px) {
+  #app-header {
+    padding: 0 3rem;
+  }
+}
+
+#nav-wrapper {
+  position: fixed;
+  top: 0;
+  left: -760px;
+  width: 100vw;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(128, 128, 128, 0.9);
+  transition: all 0.4s ease-out;
+}
+@media (min-width: 750px) {
+  #nav-wrapper {
+    width: auto;
+    left: 0;
+  }
+}
+
+@media (min-width: 750px) {
+  body.nav-positioner {
+    padding-left: 0;
+  }
+}
+
+body.nav-positioner #nav-wrapper {
+  left: 0 !important;
+}
+@media (min-width: 750px) {
+  body.nav-positioner #nav-wrapper {
+    left: -760px !important;
+  }
+}
+
+#nav-menu {
+  width: 300px;
+  height: 100%;
+  box-shadow: 3px 0 3px grey;
+  padding-top: 3rem;
+  background-color: white;
+  overflow: auto;
+}
+
+#nav-toggler {
+  margin-left: auto;
+  color: white;
+  padding: 1.5px 5px;
+  border-radius: 5px;
+  font-size: 1.7rem;
+}
+#nav-toggler:hover {
+  background-color: rgba(211, 211, 211, 0.363);
+}
+
 .btn-flex {
   display: flex;
 }
+.btn-flex:hover, #nav-menu>.btn-add:hover {
+  background-color: #eae5e5;
+}
+
 .btn-menu {
   width: 100%;
   border: none;
-  background-color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   padding: 0.8rem 1rem;
 }
-.btn-menu:hover {
-  background-color: lightgrey;
+
+#nav-projects {
+  margin: 0;
 }
-#nav-projects .btn-flex::before {
-  content: counter(list-style-type, square);
-  margin-right: 0.5rem;
-}
-.btn-menu span:last-child {
-  margin-left: auto;
-}
-.btn-add {
-  text-align: left;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li::marker {
-  margin-left: 2rem;
-}
+
 #nav-projects h2 {
   margin: 0.5rem 1rem;
   border-bottom: 1px solid grey;
 }
 
-@media (min-width: 720px) {
-  #nav-menu {
-    position: fixed;
-    width: 350px;
-    height: 100vh;
-    box-shadow: 3px 0 3px grey;
+#nav-projects .btn-flex::before {
+  content: counter(list-style-type, square);
+  margin-right: 0.5rem;
+}
+
+.btn-menu span:last-child {
+  margin-left: auto;
+}
+
+.btn-add {
+  text-align: left;
+  color: grey;
+}
+.btn-add:hover {
+  color: black;
+}
+
+.fa-plus {
+  margin-right: 0.4rem;
+}
+.btn-add:hover .fa-plus {
+  color: darkblue
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li::marker {
+  margin-left: 2rem;
+}
+
+/* Project page */
+main {
+  width: 100%;
+  max-width: 750px;
+  margin: var(--header-height, 55px) auto 0;
+  padding: 2rem 0.5rem;
+}
+@media (min-width: 750px) {
+  main {
+    padding: 2rem;
   }
+}
+
+main header {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.btn-options {
+  color: grey;
+  border: none;
+  background-color: transparent;
+  font-size: 1.6rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.task-list {
+  margin: 2rem -0.5rem 0.5rem;
+}
+
+.task-list li {
+  display: flex;
+  cursor: pointer;
+  padding: 1rem 0.5rem;
+  border-top: 1px solid lightgray;
+}
+
+.task-list li:last-child {
+  border-bottom: 1px solid lightgray;
+}
+
+li.checked {
+  text-decoration: line-through;
+  color: grey;
+}
+
+li.priority {
+  background: lightyellow;
+}
+
+.fa-check {
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 2px 2px gray;
+  padding: 2px;
+  vertical-align: text-top;
+  font-size: 0.8rem;
+}
+
+.task-list li.checked .fa-check {
+  background: blue;
+}
+
+.btn-check {
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 0.5rem;
+}
+
+.due-date {
+  background-color: #eae5e5;
+  margin-left: auto;
+  color: grey;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  padding: 0 0.3rem;
+}
+
+main .btn-add {
+  padding-left: 0.1rem;
+  /* -webkit-tap-highlight-color: transparent; */
+}
+.btn-add:focus {
+  outline: none !important;
 }

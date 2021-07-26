@@ -1,4 +1,4 @@
-import { projects } from './index.js';
+import { projects } from './data.js';
 import { createProjectPage } from './project.js';
 import { loadContent } from './domChange.js';
 
@@ -65,14 +65,8 @@ function createNavMenu() {
   const btnAdd = document.createElement('button');
   btnAdd.classList.add('btn-menu', 'btn-add');
   btnAdd.setAttribute('type', 'button');
+  btnAdd.textContent = ' Add project';
   navMenu.appendChild(btnAdd);
-
-  const faPlus = document.createElement('i');
-  faPlus.classList.add('fas', 'fa-plus');
-  btnAdd.appendChild(faPlus);
-
-  const text = document.createTextNode(' Add project');
-  btnAdd.appendChild(text);
 
   return navWrapper;
 }

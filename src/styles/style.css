@@ -13,18 +13,22 @@ html, body {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
+  scroll-behavior: smooth;
 }
 
-h1, h2 {
+h1, h3 {
   margin: 0;
-  font-size: 1.8rem;
 }
 
 button {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+input:focus, textarea:focus {
+  outline: none;
 }
 
 /* Main menu */
@@ -45,13 +49,17 @@ button {
   height: var(--header-height, 55px);
   color: white;
   background-color: darkblue;
-  padding: 0 1rem;
+  padding: 0 0.7rem;
   z-index: 2;
 }
 @media (min-width: 750px) {
   #app-header {
     padding: 0 3rem;
   }
+}
+
+h1 {
+  font-size: 1.8rem;
 }
 
 #nav-wrapper {
@@ -62,7 +70,7 @@ button {
   height: 100%;
   z-index: 1;
   background-color: rgba(128, 128, 128, 0.9);
-  transition: all 0.4s ease-out;
+  transition: all 0.3s ease-out;
 }
 @media (min-width: 750px) {
   #nav-wrapper {
@@ -108,6 +116,7 @@ body.nav-positioner #nav-wrapper {
 
 .btn-flex {
   display: flex;
+  padding: 0.8rem 1rem;
 }
 .btn-flex:hover, #nav-menu>.btn-add:hover {
   background-color: #eae5e5;
@@ -118,7 +127,6 @@ body.nav-positioner #nav-wrapper {
   border: none;
   font-size: 1.1rem;
   cursor: pointer;
-  padding: 0.8rem 1rem;
 }
 
 #nav-projects {
@@ -142,16 +150,15 @@ body.nav-positioner #nav-wrapper {
 .btn-add {
   text-align: left;
   color: grey;
+  padding: 0.3rem 1rem;
+  color: darkblue;
+  line-height: 2rem;
 }
-.btn-add:hover {
-  color: black;
-}
-
-.fa-plus {
-  margin-right: 0.4rem;
-}
-.btn-add:hover .fa-plus {
-  color: darkblue
+.btn-add::before {
+  content: '+';
+  position: relative;
+  top: 3px;
+  font-size: 1.8rem;
 }
 
 ul {
@@ -168,7 +175,7 @@ main {
   width: 100%;
   max-width: 750px;
   margin: var(--header-height, 55px) auto 0;
-  padding: 2rem 0.5rem;
+  padding: 1.2rem 0.5rem;
 }
 @media (min-width: 750px) {
   main {
@@ -179,6 +186,7 @@ main {
 main header {
   display: flex;
   margin-bottom: 0.5rem;
+  font-size: 1.4rem;
 }
 
 .btn-options {
@@ -196,8 +204,9 @@ main header {
 
 .task-list li {
   display: flex;
+  align-items: center;
   cursor: pointer;
-  padding: 1rem 0.5rem;
+  padding: 1rem 0.7rem;
   border-top: 1px solid lightgray;
 }
 
@@ -243,11 +252,86 @@ li.priority {
   border-radius: 5px;
   padding: 0 0.3rem;
 }
+.due-date.today {
+  color: green;
+  border: 2px solid green;
+}
+.due-date.expired {
+  color: darkred;
+}
 
 main .btn-add {
   padding-left: 0.1rem;
-  /* -webkit-tap-highlight-color: transparent; */
+  -webkit-tap-highlight-color: transparent;
 }
-.btn-add:focus {
-  outline: none !important;
+
+form {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease-out;
+}
+
+.show-form form {
+  max-height: 300px;
+  border-bottom: 1px solid lightgray;
+  padding: 0.5rem 0.2rem;
+}
+
+.show-form .btn-add::before {
+  content: '-';
+}
+
+input#task-title, textarea {
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 0.2rem;
+}
+
+#task-title, #task-notes {
+  margin-bottom: 0.4rem;
+}
+
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.flatpickr {
+  display: flex;
+  box-shadow: 0 0 1px 1px gray;
+  border-radius: 5px;
+  width: max-content;
+}
+
+#task-date {
+  border: none;
+  cursor: pointer;
+  width: 100px;
+  padding: 0.3rem 0;
+}
+
+.input-button {
+  margin-left: auto;
+  border-left: 1px solid gray;
+  padding: 0 0.4rem;
+}
+
+.flatpickr button {
+  color: grey;
+}
+
+.btn-submit {
+  display: block;
+  background: darkblue;
+  color: white;
+  padding: 0.4rem 2rem;
+  border-radius: 5px;
+  margin: 1rem 0;
 }

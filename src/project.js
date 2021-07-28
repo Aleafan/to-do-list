@@ -1,7 +1,8 @@
 import flatpickr from "flatpickr";
 import { parse, format, isToday, isTomorrow, isThisYear, isPast } from 'date-fns';
-import { countProgress } from './helpers.js';
-import { createTask } from './data.js';
+import { projects, createTask } from './data.js';
+import { recalcTaskNumber } from './navMenu.js';
+import { setAttributes } from './helpers.js';
 
 function createProjectPage(project) {
   const main = document.createElement('main');
@@ -14,9 +15,7 @@ function createProjectPage(project) {
   header.appendChild(h3);
 
   const btnOptions = document.createElement('button');
-  btnOptions.setAttribute('type', 'button');
-  btnOptions.setAttribute('aria-label', 'show-options');
-  btnOptions.classList.add('btn-options');
+  setAttributes(btnOptions, {'type': 'button', 'aria-label': 'show-options', 'class': 'btn-options'});
   header.appendChild(btnOptions);
 
   const iconEllipsis = document.createElement('i');
@@ -25,9 +24,7 @@ function createProjectPage(project) {
 
   const progress = document.createElement('progress');
   progress.setAttribute('max', '100');
-  const progressValue = countProgress(project);
-  progress.setAttribute('value', progressValue);
-  progress.textContent = progressValue;
+  setProgressDisplay(project, progress);
   main.appendChild(progress);
 
   const description = document.createElement('p');
@@ -38,17 +35,15 @@ function createProjectPage(project) {
   taskList.classList.add('task-list');
   main.appendChild(taskList);
 
-  project.tasks.forEach(task => addTaskToDom(task, taskList));
+  project.tasks.forEach(task => addTaskToList(task, taskList));
 
   main.appendChild(createTaskForm(project));
-
-  // const template = document.querySelector('.project-page');
-  // let main = template.content.cloneNode(true);
 
   return main;
 }
 
 function createTaskForm(project) {
+
   const taskFormWrapper = document.createElement('div');
   taskFormWrapper.setAttribute('id', 'task-form-wrapper');
   
@@ -56,37 +51,48 @@ function createTaskForm(project) {
   taskForm.setAttribute('id', 'task-form');
   taskFormWrapper.appendChild(taskForm);
 
+  const flexWrapper = document.createElement('div');
+  flexWrapper.classList.add('flex-wrapper');
+  taskForm.appendChild(flexWrapper);
+
   const labelTitle = document.createElement('label');
-  labelTitle.setAttribute('for', 'task-title');
-  labelTitle.classList.add('visuallyhidden');
+  setAttributes(labelTitle, {'for': 'task-title', 'class': 'visuallyhidden'});
   labelTitle.textContent = 'Task name';
-  taskForm.appendChild(labelTitle);
+  flexWrapper.appendChild(labelTitle);
 
   const inputTitle = document.createElement('input');
-  const inputTitleAttr = [['type', 'text'], ['id', 'task-title'], ['placeholder', 'Task name'], ['required', '']];
-  inputTitleAttr.forEach(attribute => inputTitle.setAttribute(...attribute));
-  taskForm.appendChild(inputTitle);
+  setAttributes(inputTitle, {'type': 'text', 'id': 'task-title', 'placeholder': 'Task name', 'required': ''});
+  flexWrapper.appendChild(inputTitle);
+
+  const btnPriority = document.createElement('button');
+  setAttributes(btnPriority, {'type': 'button', 'value': '', 'aria-label': 'set-priority', 'id': 'task-priority'});
+  flexWrapper.appendChild(btnPriority);
+
+  const iconFlag = document.createElement('i');
+  iconFlag.classList.add('fas', 'fa-flag');
+  btnPriority.appendChild(iconFlag);  
 
   const labelNotes = document.createElement('label');
-  labelNotes.setAttribute('for', 'task-notes');
-  labelNotes.classList.add('visuallyhidden');
+  setAttributes(labelNotes, {'for': 'task-notes', 'class': 'visuallyhidden'});
   labelNotes.textContent = 'Task notes';
   taskForm.appendChild(labelNotes);
 
   const inputNotes = document.createElement('textarea');
-  const inputNotesAttr = [['id', 'task-notes'], ['placeholder', 'Notes'], ['rows', '2']];
-  inputNotesAttr.forEach(attribute => inputNotes.setAttribute(...attribute));
+  setAttributes(inputNotes, {'id': 'task-notes', 'placeholder': 'Notes', 'rows': '2'});
   taskForm.appendChild(inputNotes);
+
+  const formOptions = document.createElement('div');
+  formOptions.classList.add('form-options');
+  taskForm.appendChild(formOptions);
 
   // Create date picker
   const datePicker = document.createElement('div');
   datePicker.classList.add('flatpickr');
-  taskForm.appendChild(datePicker);
+  formOptions.appendChild(datePicker);
 
   const btnCalendar = document.createElement('button');
-  const btnCalendarAttr = [['type', 'button'], ['title', 'toggle'], ['data-toggle', ''], ['aria-label', 'toggle-calendar']];
-  btnCalendarAttr.forEach(attribute => btnCalendar.setAttribute(...attribute));  
-  btnCalendar.classList.add('input-button');
+  setAttributes(btnCalendar, {'type': 'button', 'title': 'toggle', 'data-toggle': '', 'aria-label': 'toggle-calendar', 
+      'class': 'input-button'});
   datePicker.appendChild(btnCalendar);
 
   const iconCalendar = document.createElement('i');
@@ -94,20 +100,17 @@ function createTaskForm(project) {
   btnCalendar.appendChild(iconCalendar);
 
   const labelDate = document.createElement('label');
-  labelDate.setAttribute('for', 'task-date');
-  labelDate.classList.add('visuallyhidden');
+  setAttributes(labelDate, {'for': 'task-date', 'class': 'visuallyhidden'});
   labelDate.textContent = 'When';
   datePicker.appendChild(labelDate);
 
   const inputDate = document.createElement('input');
-  const inputDatesAttr = [['type', 'text'], ['placeholder', 'When'], ['data-input', '']]
-  inputDatesAttr.forEach(attribute => inputDate.setAttribute(...attribute));
+  setAttributes(inputDate, {'type': 'text', 'placeholder': 'When', 'data-input': ''});
   datePicker.appendChild(inputDate);
   
   const btnClearDate = document.createElement('button');
-  const btnClearDateAttr = [['type', 'button'], ['title', 'clear'], ['data-clear', ''], ['aria-label', 'clear-date']];
-  btnClearDateAttr.forEach(attribute => btnClearDate.setAttribute(...attribute));
-  btnClearDate.classList.add('input-button');
+  setAttributes(btnClearDate, {'type': 'button', 'title': 'clear', 'data-clear': '', 'aria-label': 'clear-date', 
+      'class': 'input-button'});
   datePicker.appendChild(btnClearDate);
 
   const iconTimes = document.createElement('i');
@@ -117,27 +120,62 @@ function createTaskForm(project) {
   // Initialize flatpickr instance
   initializeFlatpickr(datePicker);
 
+  // Create project selection menu
+  const taskProjectWrapper = document.createElement('div');
+  taskProjectWrapper.setAttribute('id', 'task-project-wrapper');
+  formOptions.appendChild(taskProjectWrapper);
+
+  const labelProject = document.createElement('label');
+  setAttributes(labelProject, {'for': 'task-project', 'class': 'visuallyhidden'});
+  labelProject.textContent = 'Select a project';
+  taskProjectWrapper.appendChild(labelProject);
+
+  const selectProject = document.createElement('select');
+  selectProject.setAttribute('id', 'task-project');
+  taskProjectWrapper.appendChild(selectProject);
+
+  projects.forEach(proj => {
+    const option = document.createElement('option');
+    option.textContent = proj.title;
+    option.setAttribute('value', proj.id);
+    if (project.id === proj.id) option.setAttribute('selected', '');
+    selectProject.appendChild(option);
+  });
+
+  const btnFormWrapper = document.createElement('div');
+  btnFormWrapper.classList.add('btn-form-wrapper');
+  taskForm.appendChild(btnFormWrapper);
+
   const btnSubmit = document.createElement('button');
-  btnSubmit.setAttribute('type', 'submit');
-  btnSubmit.classList.add('btn-submit');
+  setAttributes(btnSubmit, {'type': 'submit', 'class': 'btn-form btn-submit'});
   btnSubmit.textContent = 'Save';
-  taskForm.appendChild(btnSubmit);
+  btnFormWrapper.appendChild(btnSubmit);
+
+  const btnCancel = document.createElement('button');
+  setAttributes(btnCancel, {'type': 'button', 'class': 'btn-form btn-cancel'});
+  btnCancel.textContent = 'Cancel';
+  btnFormWrapper.appendChild(btnCancel);
 
   const btnAddTask = document.createElement('button');
-  btnAddTask.setAttribute('type', 'button');
-  btnAddTask.classList.add('btn-menu', 'btn-add');
+  setAttributes(btnAddTask, {'type': 'button', 'class': 'btn-menu btn-add'});
   btnAddTask.textContent = ' New task';
   taskFormWrapper.appendChild(btnAddTask);
 
+  // Add event listeners
+  btnPriority.addEventListener('click', togglePriorityState);
+
   btnAddTask.addEventListener('click', toggleTaskForm);
+
+  btnCancel.addEventListener('click', () => cancelTask(taskForm));
 
   taskForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    submitTask(this, project);
+    submitTask(this, project.id);
   });
 
   return taskFormWrapper;
 }
+
 
 function toggleTaskForm() {
   const taskFormWrapper = document.getElementById('task-form-wrapper');
@@ -149,18 +187,49 @@ function toggleTaskForm() {
   }
 }
 
-function submitTask(form, project) {
+
+function togglePriorityState() {
+  if (this.value) {
+    this.value = '';
+    this.classList.remove('active');
+  } else {
+    this.value = '1';
+    this.classList.add('active');
+  }
+}
+
+
+function submitTask(form, id) {
   const title = form.querySelector('#task-title').value;
   const notes = form.querySelector('#task-notes').value;
   const dueDate = form.querySelector('#task-date').value;
-  const task = createTask(title, notes, dueDate);
+  const btnPriority = form.querySelector('#task-priority');
+  const priority = btnPriority.value;
+  const task = createTask(title, notes, dueDate, priority);
+
+  const projectId = form.querySelector('#task-project').value;
+  const project = projects.find(currProject => currProject.id === projectId);
   project.addTask(task);
-  addTaskToDom(task);
+
+  if (projectId === id) {
+    addTaskToList(task);
+    setProgressDisplay(project);
+  }  
   toggleTaskForm();
+  if (priority) togglePriorityState.apply(btnPriority);
+  form.reset();
+  recalcTaskNumber(project);
+}
+
+function cancelTask(form) {
+  toggleTaskForm();
+  const btnPriority = form.querySelector('#task-priority');
+  if (btnPriority.value) togglePriorityState.apply(btnPriority);
   form.reset();
 }
 
-function addTaskToDom(task, taskList) {
+
+function addTaskToList(task, taskList) {
   if (!taskList) {
     taskList = document.querySelector('.task-list');
   }
@@ -171,9 +240,7 @@ function addTaskToDom(task, taskList) {
   taskList.appendChild(li);
 
   const btnCheck = document.createElement('button');
-  btnCheck.setAttribute('type', 'button');
-  btnCheck.setAttribute('aria-label', 'complete-task');
-  btnCheck.classList.add('btn-check');
+  setAttributes(btnCheck, {'type': 'button', 'aria-label': 'complete-task', 'class': 'btn-check'});
   li.appendChild(btnCheck);
 
   const iconCheck = document.createElement('i');
@@ -197,6 +264,7 @@ function addTaskToDom(task, taskList) {
   }
 }
 
+
 function formatDate(dateStr) {
   const parsedDate = parse(dateStr, "MMM d yyyy", new Date());
   const expired = isPast(parsedDate);
@@ -206,6 +274,7 @@ function formatDate(dateStr) {
       : dateStr;
   return { date, expired };
 }
+
 
 function initializeFlatpickr(element) {
   flatpickr(element, { 
@@ -222,6 +291,16 @@ function initializeFlatpickr(element) {
       fp.altInput.value = formatDate(dateStr).date;
       },
   });
+}
+
+
+function setProgressDisplay(project, progress) {
+  if (!progress) {
+    progress = document.querySelector('progress');
+  }
+  const progressValue = project.calcProgress();
+  progress.setAttribute('value', progressValue);
+  progress.textContent = `${progressValue} %`;
 }
 
 export { createProjectPage };

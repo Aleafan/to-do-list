@@ -1,10 +1,12 @@
-function countProgress(project) {
-  let completed = 0;
-  project.tasks.forEach(task => {
-    if (task.complete) completed++;
-  });
-  const progress = Math.round(completed / project.tasks.length * 100);
-  return progress;
+// Unique ID generator (based on https://gist.github.com/gordonbrander/2230317#file-id-js)
+function uniqueId() {
+  return 'a' + Math.random().toString(36).substr(2, 9);
 }
 
-export { countProgress };
+function setAttributes(element, attributes) {
+  for (const key in attributes) {
+    element.setAttribute(key, attributes[key]);
+  }
+}
+
+export { uniqueId, setAttributes };

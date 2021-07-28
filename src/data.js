@@ -1,6 +1,9 @@
+import { uniqueId } from "./helpers";
+
 const vacation = {
+  id: 'a94hngh656',
   title: 'Vacation in Italy',
-  description: 'We\'ll go from June 14-22 and visit Rome, Siena and Florence', 
+  description: 'We\'ll go from June 14-22 and visit Rome, Siena and Florence',
   tasks: [
     {
       title: 'Book flight',
@@ -33,9 +36,18 @@ const vacation = {
   ],
   addTask(task) {
     this.tasks.push(task);
-  }
+  },
+  calcProgress() {
+    let completed = 0;
+    this.tasks.forEach(task => {
+    if (task.complete) completed++;
+    });
+    const progress = Math.round(completed / this.tasks.length * 100);
+    return progress;
+  },  
 }
 const exercise = {
+  id: 'acurlpj9pg',
   title: 'Exercise',
   description: 'Phisical exercise is important for general well-being', 
   tasks: [
@@ -63,9 +75,18 @@ const exercise = {
   ],
   addTask(task) {
     this.tasks.push(task);
-  }
+  },
+  calcProgress() {
+    let completed = 0;
+    this.tasks.forEach(task => {
+    if (task.complete) completed++;
+    });
+    const progress = Math.round(completed / this.tasks.length * 100);
+    return progress;
+  }, 
 }
 const health = {
+  id: 'ayl9h1qd67',
   title: 'Health',
   description: 'Caring for my health leads to better quality of life', 
   tasks: [
@@ -93,9 +114,18 @@ const health = {
   ],
   addTask(task) {
     this.tasks.push(task);
-  }
+  },
+  calcProgress() {
+    let completed = 0;
+    this.tasks.forEach(task => {
+    if (task.complete) completed++;
+    });
+    const progress = Math.round(completed / this.tasks.length * 100);
+    return progress;
+  }, 
 }
 const house = {
+  id: 'a9yorb54d2',
   title: 'House',
   description: 'Clean the house once every week', 
   tasks: [
@@ -116,14 +146,23 @@ const house = {
   ],
   addTask(task) {
     this.tasks.push(task);
-  }
+  },
+  calcProgress() {
+    let completed = 0;
+    this.tasks.forEach(task => {
+    if (task.complete) completed++;
+    });
+    const progress = Math.round(completed / this.tasks.length * 100);
+    return progress;
+  }, 
 }
 
-function createTask(title, notes, dueDate) {
+function createTask(title, notes, dueDate, priority) {
   return {
     title,
     notes,
     dueDate,
+    priority,
     complete: false,
   }
 }

@@ -133,26 +133,45 @@
     <template id='add-task'>
       <div id='task-form-wrapper'>
         <form id='task-form'>
-          <label for="task-title" class='visuallyhidden'>Task name</label>
-          <input type="text" id="task-title" placeholder="Task name" required>
+          <div class='flex-wrapper'>
+            <label for="task-title" class='visuallyhidden'>Task name</label>
+            <input type="text" id="task-title" placeholder="Task name" required>
+
+            <button id='task-priority' type='button' value='0' aria-label='set-priority'>
+              <i class="fas fa-flag"></i>
+            </button>
+          </div>
           
           <label for='task-notes' class='visuallyhidden'>Task notes</label>
           <textarea id="task-notes" rows="2" placeholder='Notes'></textarea>
 
-          <div class="flatpickr">
-            <button type='button' class="input-button" title="toggle" data-toggle aria-label='toggle-calendar'>
-              <i class="far fa-calendar-alt"></i>
-            </button>
-    
-            <label for='task-date' class='visuallyhidden'>When</label>
-            <input type="text" id='task-date' placeholder="When" data-input>
-    
-            <button type='button' class="input-button" title="clear" data-clear aria-label='clear-date'>
-              <i class="fas fa-times"></i>
-            </button> 
+          <div class='form-options'>
+            <div class="flatpickr">
+              <button type='button' class="input-button" title="toggle" data-toggle aria-label='toggle-calendar'>
+                <i class="far fa-calendar-alt"></i>
+              </button>
+      
+              <label for='task-date' class='visuallyhidden'>When</label>
+              <input type="text" id='task-date' placeholder="When" data-input>
+      
+              <button type='button' class="input-button" title="clear" data-clear aria-label='clear-date'>
+                <i class="fas fa-times"></i>
+              </button> 
+              <div id='task-project-wrapper'>
+                <label for='task-project' class='visuallyhidden'>Select a project</label>
+                <select id='task-project'>
+                  <option selected>Vacation in Italy</option>
+                  <option>Exercise</option>
+                  <option>Health</option>
+                  <option>House</option>
+                </select>
+              </div>
+            </div>
           </div>
-
-          <button type="submit" class='btn-submit'>Save</button>
+          <div class='btn-form-wrapper'>
+            <button type="submit" class='btn-form btn-submit'>Save</button>
+            <button type="button" class='btn-form btn-cancel'>Cancel</button>
+          </div>
         </form>
 
         <button class='btn-menu btn-add' type='button'>
@@ -160,6 +179,5 @@
         </button>
       </div>
     </template>
-
   </body>
 </html>

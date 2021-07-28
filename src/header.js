@@ -1,4 +1,5 @@
 import { toggleNav } from './navMenu.js';
+import { setAttributes } from './helpers.js';
 
 function createHeader() {
   const header = document.createElement('header');
@@ -15,9 +16,7 @@ function createHeader() {
   h1.appendChild(h1Text);
 
   const button = document.createElement('button');
-  button.setAttribute('type', 'button');
-  button.setAttribute('id', 'nav-toggler');
-  button.setAttribute('aria-label', 'toggle-menu');
+  setAttributes(button, {'type': 'button', 'id': 'nav-toggler', 'aria-label': 'toggle-menu'});
   header.appendChild(button);
 
   button.addEventListener('click', toggleNav);

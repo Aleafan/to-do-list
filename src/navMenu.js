@@ -1,6 +1,7 @@
 import { projects } from './data.js';
 import { createProjectPage } from './project.js';
 import { loadContent } from './domChange.js';
+import { setAttributes } from './helpers.js';
 
 const timeline = ['Today', 'This week', 'All tasks'];
 
@@ -21,8 +22,7 @@ function createNavMenu() {
     navTimeline.appendChild(li);
 
     const button = document.createElement('button');
-    button.classList.add('btn-menu', 'btn-flex');
-    button.setAttribute('type', 'button');
+    setAttributes(button, {'class': 'btn-menu btn-flex', 'type': 'button'});
     li.appendChild(button);
 
     const span1 = document.createElement('span');
@@ -44,11 +44,11 @@ function createNavMenu() {
 
   projects.forEach(project => {
     const li = document.createElement('li');
+    li.setAttribute('id', project.id);
     navProjects.appendChild(li);
 
     const button = document.createElement('button');
-    button.classList.add('btn-menu', 'btn-flex');
-    button.setAttribute('type', 'button');
+    setAttributes(button, {'class': 'btn-menu btn-flex', 'type': 'button'});
     li.appendChild(button);
 
     const spanTitle = document.createElement('span');
@@ -56,6 +56,7 @@ function createNavMenu() {
     button.appendChild(spanTitle);
 
     const spanNumber = document.createElement('span');
+    spanNumber.classList.add('task-number')
     spanNumber.textContent = project.tasks.length;
     button.appendChild(spanNumber);
     
@@ -63,8 +64,7 @@ function createNavMenu() {
   });
   
   const btnAdd = document.createElement('button');
-  btnAdd.classList.add('btn-menu', 'btn-add');
-  btnAdd.setAttribute('type', 'button');
+  setAttributes(btnAdd, {'class': 'btn-menu btn-add', 'type': 'button'});
   btnAdd.textContent = ' Add project';
   navMenu.appendChild(btnAdd);
 
@@ -75,4 +75,10 @@ function toggleNav() {
   document.body.classList.toggle('nav-positioner');
 }
 
-export { createNavMenu, toggleNav };
+function recalcTaskNumber(project) {
+  const navProjects = document.getElementById('nav-projects');
+  const spanNumber = navProjects.querySelector(`#${project.id} .task-number`);
+  spanNumber.textContent = project.tasks.length;
+}
+
+export { createNavMenu, toggleNav, recalcTaskNumber };

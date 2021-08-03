@@ -101,10 +101,12 @@
 
         <ul class='task-list'>
           <li class='checked'>
-            <button class='btn-check' type='button' aria-label='complete-task'>
-              <i class="fas fa-check"></i>
-            </button>
-            Book flight
+            <div class='task-main'>
+              <button class='btn-check' type='button' aria-label='complete-task'>
+                <i class="fas fa-check"></i>
+              </button>
+              Book flight
+            </div>
           </li>
           <li>
             <button class='btn-check' type='button' aria-label='complete-task'>
@@ -132,12 +134,12 @@
 
     <template id='add-task'>
       <div id='task-form-wrapper'>
-        <form id='task-form'>
+        <form id='new-task-form'>
           <div class='flex-wrapper'>
             <label for="task-title" class='visuallyhidden'>Task name</label>
-            <input type="text" id="task-title" placeholder="Task name" required>
+            <input type="text" class="task-title" placeholder="Task name" required>
 
-            <button id='task-priority' type='button' value='0' aria-label='set-priority'>
+            <button class='task-option' type='button' value='0' aria-label='set-priority'>
               <i class="fas fa-flag"></i>
             </button>
           </div>
@@ -157,15 +159,15 @@
               <button type='button' class="input-button" title="clear" data-clear aria-label='clear-date'>
                 <i class="fas fa-times"></i>
               </button> 
-              <div id='task-project-wrapper'>
-                <label for='task-project' class='visuallyhidden'>Select a project</label>
-                <select id='task-project'>
-                  <option selected>Vacation in Italy</option>
-                  <option>Exercise</option>
-                  <option>Health</option>
-                  <option>House</option>
-                </select>
-              </div>
+            </div>
+            <div id='task-project-wrapper'>
+              <label for='task-project' class='visuallyhidden'>Select a project</label>
+              <select id='task-project'>
+                <option selected>Vacation in Italy</option>
+                <option>Exercise</option>
+                <option>Health</option>
+                <option>House</option>
+              </select>
             </div>
           </div>
           <div class='btn-form-wrapper'>
@@ -179,5 +181,34 @@
         </button>
       </div>
     </template>
+
+    <template id='task-extend'>
+      <div class='task-extension'>
+        <p>We'll go from 12 to 24 of June</p>
+        <div class='task-options'>
+          <div class="flatpickr">
+            <button type='button' class="input-button task-option" title="toggle" data-toggle aria-label='toggle-calendar'>
+              <i class="far fa-calendar-alt"></i>
+            </button>
+  
+            <label class='visuallyhidden'>
+              When
+              <input type="text" class='visuallyhidden' placeholder="When" data-input>
+            </label>
+          </div>
+  
+          <button class='task-option' type='button' aria-label='set-priority'>
+            <i class="fas fa-flag"></i>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <template id='edit-button'>
+      <button type='button' class='task-option' aria-label="edit-task">
+        <i class="fas fa-edit"></i>
+      </button>
+    </template>
+
   </body>
 </html>

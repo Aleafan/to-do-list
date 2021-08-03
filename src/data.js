@@ -7,31 +7,67 @@ const vacation = {
   tasks: [
     {
       title: 'Book flight',
-      notes: '',
+      notes: 'Flight during the day',
       dueDate: 'Jul 23 2021',
-      priority: 1,
-      complete: 1,
+      priority: true,
+      complete: true,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Read about the metro',
-      notes: '',
+      notes: 'Tickets, prices, opening times',
       dueDate: 'Jul 26 2021',
-      priority: 0,
-      complete: 0,
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Buy travel guide',
-      notes: '',
+      notes: 'Rough Guide',
       dueDate: 'Sep 12 2021',
-      priority: 0,
-      complete: 1,
+      priority: false,
+      complete: true,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Book hotel room',
       notes: '',
       dueDate: '',
-      priority: 1,
-      complete: 0,
+      priority: true,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     }
   ],
   addTask(task) {
@@ -55,22 +91,49 @@ const exercise = {
       title: 'Practice yoga',
       notes: 'Practice yoga 3 times per week',
       dueDate: '',
-      priority: 1,
-      complete: 0,
+      priority: true,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Exercise on the bar',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 0,
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Do back exercises',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 0,
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     }
   ],
   addTask(task) {
@@ -94,22 +157,49 @@ const health = {
       title: 'Have healthy diet',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 1,
+      priority: false,
+      complete: true,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Reduce sugar consumption',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 0,
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Drink less alcohole',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 1,
+      priority: false,
+      complete: true,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     }
   ],
   addTask(task) {
@@ -133,15 +223,33 @@ const house = {
       title: 'Clean the house',
       notes: 'Once per week',
       dueDate: '',
-      priority: 0,
+      priority: false,
       complete: 1,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     },
     {
       title: 'Repair broken tap',
       notes: '',
       dueDate: '',
-      priority: 0,
-      complete: 0,
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
     }
   ],
   addTask(task) {
@@ -158,13 +266,21 @@ const house = {
 }
 
 function createTask(title, notes, dueDate, priority) {
-  return {
+  priority = priority ? true : false;
+  const togglePriority = () => task.priority = !task.priority;
+  const toggleComplete = () => task.complete = !task.complete;
+  const changeDate = (date) => task.dueDate = date;
+  const task = {
     title,
     notes,
     dueDate,
     priority,
     complete: false,
+    togglePriority,
+    toggleComplete,
+    changeDate,
   }
+  return task;
 }
 
 const projects = [vacation, exercise, health, house];

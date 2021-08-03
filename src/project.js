@@ -1,8 +1,6 @@
 import flatpickr from "flatpickr";
-import { parse, format, isToday, isTomorrow, isThisYear, isPast } from 'date-fns';
-import { projects, createTask } from './data.js';
-import { recalcTaskNumber } from './navMenu.js';
-import { setAttributes } from './helpers.js';
+import { createTaskForm } from './taskForm.js';
+import { setAttributes, createElemAttr, formatDate } from './helpers.js';
 
 function createProjectPage(project) {
   const main = document.createElement('main');
@@ -35,145 +33,21 @@ function createProjectPage(project) {
   taskList.classList.add('task-list');
   main.appendChild(taskList);
 
-  project.tasks.forEach(task => addTaskToList(task, taskList));
+  project.tasks.forEach(task => taskList.appendChild(createTaskLi(task, project)));
 
-  main.appendChild(createTaskForm(project));
+  const taskFormWrapper = createElemAttr('div', {id: 'task-form-wrapper'});
+  main.appendChild(taskFormWrapper);
 
-  return main;
-}
-
-function createTaskForm(project) {
-
-  const taskFormWrapper = document.createElement('div');
-  taskFormWrapper.setAttribute('id', 'task-form-wrapper');
-  
-  const taskForm = document.createElement('form');
-  taskForm.setAttribute('id', 'task-form');
-  taskFormWrapper.appendChild(taskForm);
-
-  const flexWrapper = document.createElement('div');
-  flexWrapper.classList.add('flex-wrapper');
-  taskForm.appendChild(flexWrapper);
-
-  const labelTitle = document.createElement('label');
-  setAttributes(labelTitle, {'for': 'task-title', 'class': 'visuallyhidden'});
-  labelTitle.textContent = 'Task name';
-  flexWrapper.appendChild(labelTitle);
-
-  const inputTitle = document.createElement('input');
-  setAttributes(inputTitle, {'type': 'text', 'id': 'task-title', 'placeholder': 'Task name', 'required': ''});
-  flexWrapper.appendChild(inputTitle);
-
-  const btnPriority = document.createElement('button');
-  setAttributes(btnPriority, {'type': 'button', 'value': '', 'aria-label': 'set-priority', 'id': 'task-priority'});
-  flexWrapper.appendChild(btnPriority);
-
-  const iconFlag = document.createElement('i');
-  iconFlag.classList.add('fas', 'fa-flag');
-  btnPriority.appendChild(iconFlag);  
-
-  const labelNotes = document.createElement('label');
-  setAttributes(labelNotes, {'for': 'task-notes', 'class': 'visuallyhidden'});
-  labelNotes.textContent = 'Task notes';
-  taskForm.appendChild(labelNotes);
-
-  const inputNotes = document.createElement('textarea');
-  setAttributes(inputNotes, {'id': 'task-notes', 'placeholder': 'Notes', 'rows': '2'});
-  taskForm.appendChild(inputNotes);
-
-  const formOptions = document.createElement('div');
-  formOptions.classList.add('form-options');
-  taskForm.appendChild(formOptions);
-
-  // Create date picker
-  const datePicker = document.createElement('div');
-  datePicker.classList.add('flatpickr');
-  formOptions.appendChild(datePicker);
-
-  const btnCalendar = document.createElement('button');
-  setAttributes(btnCalendar, {'type': 'button', 'title': 'toggle', 'data-toggle': '', 'aria-label': 'toggle-calendar', 
-      'class': 'input-button'});
-  datePicker.appendChild(btnCalendar);
-
-  const iconCalendar = document.createElement('i');
-  iconCalendar.classList.add('far', 'fa-calendar-alt');
-  btnCalendar.appendChild(iconCalendar);
-
-  const labelDate = document.createElement('label');
-  setAttributes(labelDate, {'for': 'task-date', 'class': 'visuallyhidden'});
-  labelDate.textContent = 'When';
-  datePicker.appendChild(labelDate);
-
-  const inputDate = document.createElement('input');
-  setAttributes(inputDate, {'type': 'text', 'placeholder': 'When', 'data-input': ''});
-  datePicker.appendChild(inputDate);
-  
-  const btnClearDate = document.createElement('button');
-  setAttributes(btnClearDate, {'type': 'button', 'title': 'clear', 'data-clear': '', 'aria-label': 'clear-date', 
-      'class': 'input-button'});
-  datePicker.appendChild(btnClearDate);
-
-  const iconTimes = document.createElement('i');
-  iconTimes.classList.add('fas', 'fa-times');
-  btnClearDate.appendChild(iconTimes);
-
-  // Initialize flatpickr instance
-  initializeFlatpickr(datePicker);
-
-  // Create project selection menu
-  const taskProjectWrapper = document.createElement('div');
-  taskProjectWrapper.setAttribute('id', 'task-project-wrapper');
-  formOptions.appendChild(taskProjectWrapper);
-
-  const labelProject = document.createElement('label');
-  setAttributes(labelProject, {'for': 'task-project', 'class': 'visuallyhidden'});
-  labelProject.textContent = 'Select a project';
-  taskProjectWrapper.appendChild(labelProject);
-
-  const selectProject = document.createElement('select');
-  selectProject.setAttribute('id', 'task-project');
-  taskProjectWrapper.appendChild(selectProject);
-
-  projects.forEach(proj => {
-    const option = document.createElement('option');
-    option.textContent = proj.title;
-    option.setAttribute('value', proj.id);
-    if (project.id === proj.id) option.setAttribute('selected', '');
-    selectProject.appendChild(option);
-  });
-
-  const btnFormWrapper = document.createElement('div');
-  btnFormWrapper.classList.add('btn-form-wrapper');
-  taskForm.appendChild(btnFormWrapper);
-
-  const btnSubmit = document.createElement('button');
-  setAttributes(btnSubmit, {'type': 'submit', 'class': 'btn-form btn-submit'});
-  btnSubmit.textContent = 'Save';
-  btnFormWrapper.appendChild(btnSubmit);
-
-  const btnCancel = document.createElement('button');
-  setAttributes(btnCancel, {'type': 'button', 'class': 'btn-form btn-cancel'});
-  btnCancel.textContent = 'Cancel';
-  btnFormWrapper.appendChild(btnCancel);
+  taskFormWrapper.appendChild(createTaskForm(project));
 
   const btnAddTask = document.createElement('button');
   setAttributes(btnAddTask, {'type': 'button', 'class': 'btn-menu btn-add'});
   btnAddTask.textContent = ' New task';
   taskFormWrapper.appendChild(btnAddTask);
 
-  // Add event listeners
-  btnPriority.addEventListener('click', togglePriorityState);
-
   btnAddTask.addEventListener('click', toggleTaskForm);
 
-  btnCancel.addEventListener('click', () => cancelTask(taskForm));
-
-  taskForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    submitTask(this, project.id);
-  });
-
-  return taskFormWrapper;
+  return main;
 }
 
 
@@ -183,112 +57,127 @@ function toggleTaskForm() {
     taskFormWrapper.classList.remove('show-form');
   } else {
     taskFormWrapper.classList.add('show-form');
-    taskFormWrapper.querySelector('#task-title').focus();
+    taskFormWrapper.querySelector('.task-title').focus();
   }
 }
 
 
-function togglePriorityState() {
-  if (this.value) {
-    this.value = '';
-    this.classList.remove('active');
-  } else {
-    this.value = '1';
-    this.classList.add('active');
-  }
-}
-
-
-function submitTask(form, id) {
-  const title = form.querySelector('#task-title').value;
-  const notes = form.querySelector('#task-notes').value;
-  const dueDate = form.querySelector('#task-date').value;
-  const btnPriority = form.querySelector('#task-priority');
-  const priority = btnPriority.value;
-  const task = createTask(title, notes, dueDate, priority);
-
-  const projectId = form.querySelector('#task-project').value;
-  const project = projects.find(currProject => currProject.id === projectId);
-  project.addTask(task);
-
-  if (projectId === id) {
-    addTaskToList(task);
-    setProgressDisplay(project);
-  }  
-  toggleTaskForm();
-  if (priority) togglePriorityState.apply(btnPriority);
-  form.reset();
-  recalcTaskNumber(project);
-}
-
-function cancelTask(form) {
-  toggleTaskForm();
-  const btnPriority = form.querySelector('#task-priority');
-  if (btnPriority.value) togglePriorityState.apply(btnPriority);
-  form.reset();
-}
-
-
-function addTaskToList(task, taskList) {
-  if (!taskList) {
-    taskList = document.querySelector('.task-list');
-  }
-
+function createTaskLi(task, project) {
   const li = document.createElement('li');
   if (task.complete) li.classList.add('checked');
   if (task.priority) li.classList.add('priority');
-  taskList.appendChild(li);
+
+  const taskMain = document.createElement('div');
+  taskMain.classList.add('task-main');
+  li.appendChild(taskMain);
 
   const btnCheck = document.createElement('button');
   setAttributes(btnCheck, {'type': 'button', 'aria-label': 'complete-task', 'class': 'btn-check'});
-  li.appendChild(btnCheck);
+  taskMain.appendChild(btnCheck);
 
   const iconCheck = document.createElement('i');
   iconCheck.classList.add('fas', 'fa-check');
   btnCheck.appendChild(iconCheck);
 
-  const taskTitle = document.createTextNode(task.title);
-  li.appendChild(taskTitle);
+  const taskTitle = document.createElement('span');
+  taskTitle.textContent = task.title;
+  taskMain.appendChild(taskTitle);
 
+  const dateSpan = document.createElement('span');
+  dateSpan.classList.add('due-date');
+  taskMain.appendChild(dateSpan);
+
+  displayDate(task, dateSpan);
+
+  const taskExtension = document.createElement('div');
+  taskExtension.classList.add('task-extension');
+  li.appendChild(taskExtension);
+
+  const notes = document.createElement('p');
+  notes.textContent = task.notes;
+  taskExtension.appendChild(notes);  
+
+  const taskOptions = document.createElement('div');
+  taskOptions.classList.add('task-options');
+  taskExtension.appendChild(taskOptions);
+
+  const datePicker = document.createElement('div');
+  datePicker.classList.add('flatpickr');
+  taskOptions.appendChild(datePicker);
+
+  const btnCalendar = document.createElement('button');
+  setAttributes(btnCalendar, {'type': 'button', 'class': 'input-button task-option', 'title': 'toggle',
+      'aria-label': 'toggle-calendar', 'data-toggle': ''});
+  datePicker.appendChild(btnCalendar);
+
+  const iconCalendar = document.createElement('i');
+  iconCalendar.classList.add('far', 'fa-calendar-alt');
+  btnCalendar.appendChild(iconCalendar);
+
+  const label = document.createElement('label');
+  label.classList.add('visuallyhidden');
+  label.textContent = 'When';
+  datePicker.appendChild(label);
+
+  const dateInput = document.createElement('input');
+  setAttributes(dateInput, { 'type': 'text', 'class': 'visuallyhidden', 'placeholder': 'When', 'data-input': ''});
+  label.appendChild(dateInput);
+
+  const btnPriority = document.createElement('button');
+  setAttributes(btnPriority, {'type': 'button', 'class': 'task-option', 'aria-label': 'set-priority'});
+  if (task.priority) btnPriority.classList.add('active');
+  taskOptions.appendChild(btnPriority);
+
+  const iconFlag = document.createElement('i');
+  iconFlag.classList.add('fas', 'fa-flag');
+  btnPriority.appendChild(iconFlag);
+
+  const btnEdit = document.createElement('button');
+  setAttributes(btnEdit, {'type': 'button', 'class': 'task-option', 'aria-label': 'edit-task'});
+  taskOptions.appendChild(btnEdit);
+
+  initFlatpickr(datePicker, task, dateSpan);
+
+  btnEdit.appendChild(createElemAttr('i', { class: 'fas fa-edit'}));
+
+  // Add event listeners
+  li.addEventListener('click', toggleExtension);
+
+  btnCheck.addEventListener('click', function(e) { handleCheck(e, li, task, project) });
+
+  btnCalendar.addEventListener('click', (e) => e.stopPropagation());
+
+  btnPriority.addEventListener('click', function(e) { handlePriority(e, task, this, li) });
+
+  btnEdit.addEventListener('click', function(e) { handleEdit(e, task, project, li) });
+
+  return li;
+}
+
+
+function displayDate(task, element) {
+  element.classList.remove('today', 'expired');
   if (task.dueDate) {
-    const date = document.createElement('span');
-    date.classList.add('due-date');
     const formDate = formatDate(task.dueDate);
-    date.textContent = formDate.date;
+    element.textContent = formDate.date;
     if (formDate.date === 'Today') {
-      date.classList.add('today');
+      element.classList.add('today');
     } else if (formDate.expired) {
-      date.classList.add('expired');
+      element.classList.add('expired');
     }
-    li.appendChild(date);
   }
 }
 
 
-function formatDate(dateStr) {
-  const parsedDate = parse(dateStr, "MMM d yyyy", new Date());
-  const expired = isPast(parsedDate);
-  const date = isToday(parsedDate) ? 'Today'
-      : isTomorrow(parsedDate) ? 'Tomor.'
-      : isThisYear(parsedDate) ? format(parsedDate, 'MMM d')
-      : dateStr;
-  return { date, expired };
-}
-
-
-function initializeFlatpickr(element) {
+function initFlatpickr(element, task, dateElement) {
   flatpickr(element, { 
     disableMobile: "true",
-    altInput: true,
-    altFormat: "M j Y",
     dateFormat: "M j Y",
-    minDate: 'today',
+    defaultDate: task.dueDate,
     wrap: true,
-    onReady: (a, b, fp) => {
-      fp.altInput.setAttribute('id', 'task-date');
-      },
     onChange: (selDates, dateStr, fp) => {
-      fp.altInput.value = formatDate(dateStr).date;
+      task.changeDate(dateStr);
+      displayDate(task, dateElement);
       },
   });
 }
@@ -303,4 +192,55 @@ function setProgressDisplay(project, progress) {
   progress.textContent = `${progressValue} %`;
 }
 
-export { createProjectPage };
+
+function handleCheck(e, li, task, project) {
+  e.stopPropagation();
+  task.toggleComplete();
+  task.complete ? li.classList.add('checked') : li.classList.remove('checked');
+  setProgressDisplay(project);
+}
+
+
+function handlePriority(e, task, button, li) {
+  e.stopPropagation();
+  task.togglePriority();
+  if (task.priority) {
+    li.classList.add('priority');
+    button.classList.add('active');
+  } else {
+    li.classList.remove('priority');
+    button.classList.remove('active');
+  }
+}
+
+
+function handleEdit(e, task, project, li) {
+  e.stopPropagation();
+
+  // Submit previously opened editing form
+  const openedForm = document.getElementById('edit-task-form');
+  if (openedForm) {
+     openedForm.querySelector('.btn-submit').click();
+  }
+
+  // Cancel previously opened form if it doesn't pass submit
+  if (document.getElementById('edit-task-form')) {
+    openedForm.querySelector('.btn-cancel').click();
+  }
+
+  while (li.firstChild) {
+    li.removeChild(li.firstChild);
+  }
+  li.classList.remove('checked', 'priority');
+  li.appendChild(createTaskForm(project, task));
+  li.classList.add('edit-mode');
+  li.querySelector('.task-title').focus();
+}
+
+
+function toggleExtension(e) {
+  this.classList.toggle('extended');
+}
+
+
+export { createProjectPage, createTaskLi, setProgressDisplay, toggleTaskForm };

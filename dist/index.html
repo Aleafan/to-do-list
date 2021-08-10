@@ -79,12 +79,39 @@
               </button>
             </li>
           </ul>
-          <button class='btn-menu btn-add' type='button'>
-            Add project
-          </button>
+          <div id='project-form-wrapper'>
+            <form id='project-form'>
+              <label for="project-title" class='visuallyhidden'>Project name</label>
+              <input type="text" class="project-title" placeholder="Project name" required>
+    
+              <button type="submit" class='task-option' aria-label='add-new-project'>
+                <i class="fas fa-plus"></i>
+              </button>
+            </form>
+            <button class='btn-menu btn-add' type='button'>
+              Add project
+            </button>
+          </div>
         </section>
       </div>
     </template>
+
+    <template id='options-container'>
+      <div id='popup-wrapper'>
+        <ul id='project-options'>
+          <li>
+            <button type='button'>Edit project</button>  
+          </li>
+          <li>
+            <button type='button'>Delete completed tasks</button>  
+          </li>
+          <li>
+            <button type='button'>Delete project</button>  
+          </li>
+        </ul>
+      </div>
+    </template>
+
 
     <template class='project-page'>
       <main>
@@ -136,6 +163,10 @@
       <div id='task-form-wrapper'>
         <form id='new-task-form'>
           <div class='flex-wrapper'>
+            <button class='btn-check' type='button' value='' aria-label='toggle-complete'>
+              <i class="fas fa-check"></i>
+            </button>
+
             <label for="task-title" class='visuallyhidden'>Task name</label>
             <input type="text" class="task-title" placeholder="Task name" required>
 
@@ -200,14 +231,43 @@
           <button class='task-option' type='button' aria-label='set-priority'>
             <i class="fas fa-flag"></i>
           </button>
+
+          <button type='button' class='task-option' aria-label="edit-task">
+            <i class="fas fa-edit"></i>
+          </button>
+
+          <button type='button' class='task-option' aria-label="delete-task">
+            <i class="fas fa-trash-alt"></i>
+          </button>
         </div>
       </div>
     </template>
 
-    <template id='edit-button'>
-      <button type='button' class='task-option' aria-label="edit-task">
-        <i class="fas fa-edit"></i>
-      </button>
+    <template id='confirmation'>
+      <div id='conf-wrapper'>
+        <div id='conf-delete'>
+          <p>Are you sure you want to delete task <span class='title-span'>"Book hotel room"</span>?</p>
+          <div class='btn-conf-wrapper'>
+            <button type="button" class='btn-form btn-delete'>Delete</button>
+            <button type="button" class='btn-form btn-cancel'>Cancel</button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id='project-form-template'>
+      <form id='edit-project'>
+        <label for="project-title" class='visuallyhidden'>Project name</label>
+        <input type="text" id='project-title' class="project-title" placeholder="Project name" value='Vacation in Italy' required>
+        
+        <label for='project-notes' class='visuallyhidden'>Project notes</label>
+        <textarea id="project-notes" rows="2" placeholder='Notes'></textarea>
+
+        <div class='btn-form-wrapper'>
+          <button type="submit" class='btn-form btn-submit'>Save</button>
+          <button type="button" class='btn-form btn-cancel'>Cancel</button>
+        </div>
+      </form>
     </template>
 
   </body>

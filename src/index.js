@@ -8,4 +8,4 @@ import { projects } from './data.js';
 loadInterface(createHeader());
 loadInterface(createNavMenu());
 
-loadContent(createProjectPage(projects[0]));
+loadContent(createProjectPage(projects.list[0]));

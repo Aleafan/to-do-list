@@ -17,6 +17,7 @@ html, body {
 body {
   font-family: 'Roboto Slab', serif;
   scroll-behavior: smooth;
+  padding-top: var(--header-height, 55px);
 }
 
 h1, h3 {
@@ -53,7 +54,7 @@ button {
   color: white;
   background-color: darkblue;
   padding: 0 0.7rem;
-  z-index: 3;
+  z-index: 4;
 }
 @media (min-width: 750px) {
   #app-header {
@@ -71,8 +72,8 @@ h1 {
   left: -760px;
   width: 100vw;
   height: 100%;
-  z-index: 2;
-  background-color: rgba(128, 128, 128, 0.9);
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.75);
   transition: all 0.3s ease-out;
 }
 @media (min-width: 750px) {
@@ -100,7 +101,7 @@ body.nav-positioner #nav-wrapper {
 #nav-menu {
   width: 300px;
   height: 100%;
-  box-shadow: 3px 0 3px grey;
+  box-shadow: 3px 0 3px rgba(0, 0, 0, 0.75);
   padding-top: 3rem;
   background-color: white;
   overflow: auto;
@@ -110,7 +111,6 @@ body.nav-positioner #nav-wrapper {
     width: 350px;
   }
 }
-
 
 #nav-toggler {
   margin-left: auto;
@@ -125,9 +125,12 @@ body.nav-positioner #nav-wrapper {
 
 .btn-flex {
   display: flex;
+  align-items: center;
   padding: 0.8rem 1rem;
 }
-.btn-flex:hover, #nav-menu>.btn-add:hover {
+.btn-flex:hover, 
+#nav-menu>.btn-add:hover,
+.btn-proj-option:hover {
   background-color: #eae5e5;
 }
 
@@ -147,13 +150,33 @@ body.nav-positioner #nav-wrapper {
   border-bottom: 1px solid grey;
 }
 
-#nav-projects .btn-flex::before {
-  content: counter(list-style-type, square);
+.btn-menu span:last-child {
+  margin-left: auto;
+}
+
+.project-icon {
+  font-size: 0.9rem;
   margin-right: 0.5rem;
 }
 
-.btn-menu span:last-child {
-  margin-left: auto;
+#project-form {
+  max-height: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.2s linear;
+  font-size: 1.1rem;
+  margin: 0 0.5rem 0 1rem;
+}
+
+.show-form #project-form {
+  max-height: 300px;
+  border-bottom: 1px solid gray;
+  padding: 0.5rem 0;
+}
+
+#project-form .task-option {
+  color: darkgreen;
 }
 
 .btn-add {
@@ -174,15 +197,11 @@ ul {
   padding: 0;
 }
 
-li::marker {
-  margin-left: 2rem;
-}
-
 /* Project page */
 main {
   width: 100%;
   max-width: 750px;
-  margin: var(--header-height, 55px) auto 0;
+  margin: 0 auto;
   padding: 1.2rem 0.5rem;
 }
 @media (min-width: 750px) {
@@ -192,22 +211,71 @@ main {
 }
 
 main header {
-  display: flex;
-  margin-bottom: 0.5rem;
-  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+main header h3 {
+  font-size: 1.6rem;
+}
+
+.description {
+  margin: 0.7rem 0 1rem;
+}
+
+progress {
+  width: 300px;
 }
 
 .btn-options {
   color: grey;
   border: none;
-  background-color: transparent;
-  font-size: 1.6rem;
+  background: transparent;
   cursor: pointer;
   margin-left: auto;
+  padding: 0.1rem 0.4rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-options:hover {
+    background: #e1e0e0;
+  }
+}
+
+#popup-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 5;
+}
+
+#project-options {
+  position: absolute;
+  background: white;
+  width: max-content;
+  margin: 0;
+  border-radius: 3px;
+  box-shadow: 0 0 3px 0 lightgray;
+  border: 1px solid lightgray;
+}
+
+.btn-proj-option {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 0.5rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.btn-proj-option i {
+  margin-right: 0.5rem;
+  color: gray;
 }
 
 .task-list {
-  margin: 2rem -0.5rem 0.5rem;
+  margin: 1rem -0.5rem 0.5rem;
 }
 
 .task-list li {
@@ -247,7 +315,7 @@ li.edit-mode {
   font-size: 0.8rem;
 }
 
-.task-list li.checked .fa-check {
+.checked .fa-check {
   background: blue;
 }
 
@@ -287,12 +355,14 @@ main .btn-add {
   max-height: 0;
   overflow: hidden;
   transition: all 0.4s ease-out;
+  margin: 0 -0.5rem;
+  padding: 0 0.6rem;
 }
 
 .show-form #new-task-form {
   max-height: 300px;
   border-bottom: 1px solid gray;
-  padding: 0.3rem 0 1rem;
+  padding: 0.3rem 0.6rem 1rem;
 }
 
 .show-form .btn-add {
@@ -305,22 +375,27 @@ main .btn-add {
 
 .flex-wrapper {
   display: flex;
-  margin-bottom: 0.4rem;
+  align-items: center;
 }
 
-.task-title, .task-notes {
+.task-title, .project-title {
   border: none;
-  padding: 0.2rem;
 }
 
-.task-title {
+.task-title, .project-title {
   flex-grow: 1;
+  padding: 0;
+  min-width: 0;
+}
+
+.task-notes {
+  padding-left: 1.5rem;
 }
 
 .task-option {
   color: grey;
   font-size: 1.2rem;
-  padding: 0 0.4rem;
+  padding: 0.1rem 0.4rem;
   border-radius: 5px;
 }
 .task-option.active {
@@ -332,10 +407,16 @@ main .btn-add {
   }
 }
 
+.task-option[aria-label='edit-task'] {
+  margin-left: 0.5rem;
+}
+
 textarea {
   display: block;
   width: 100%;
-  margin-bottom: 0.4rem;
+  padding: 0;
+  margin: 0.7rem 0;
+  border: none;
 }
 
 .visuallyhidden {
@@ -356,7 +437,8 @@ textarea {
   border-bottom: 2px dotted gray;
 }
 
-input.task-title:focus, 
+input.task-title:focus,
+input.project-title:focus, 
 input.form-control:focus, 
 textarea:focus {
   outline: none;
@@ -410,14 +492,14 @@ form .flatpickr:focus-within {
 }
 
 .btn-form {
-  width: 153px;
-  margin-right: 1rem;
+  width: 100px;
   padding: 0.4rem 0;
   border-radius: 5px;
 }
 
 .btn-submit {
   background: darkblue;
+  margin-right: 1rem;
   color: white;
   box-shadow: 0 0 1px 1px darkblue;
   transition: 0.3s ease-out;
@@ -435,6 +517,7 @@ form .flatpickr:focus-within {
 @media (hover: hover) and (pointer: fine) {
   .btn-cancel:hover {
     background: #e1e0e0;
+    box-shadow: 0 0 1px 1px darkred;
   }
 }
 
@@ -506,16 +589,91 @@ select.task-project {
   margin-left: 1.5rem;
 }
 
-.extended .task-extension {
+[aria-expanded='true'] .task-extension {
   max-height: 200px;
-  padding: 0.2rem 0;
+  padding: 0;
 }
 
-div.task-options {
+.task-extension p {
+  margin: 0.7rem 0;
+}
+
+.task-options {
   display: flex;
   justify-content: flex-end;
+  margin-top: 0.6rem;
 }
 
 .task-options i {
   width: 20px;
+}
+
+/* Delete confirmation menu */
+#conf-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: appear 0.3s;
+  cursor: auto;
+}
+@keyframes appear {
+  from { transform: scale(0.5); }
+  to { transform: scale(1); }
+}
+
+#conf-delete {
+  max-width: 600px;
+  background: whitesmoke;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+}
+
+#conf-delete p {
+  margin: 0;
+  text-align: center;
+}
+
+.btn-conf-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: 2px dotted gray;
+}
+
+.btn-delete {
+  background: darkred;
+  color: white;
+  box-shadow: 0 0 1px 1px darkred;
+  transition: 0.3s ease-out;
+  margin-right: 1rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-delete:hover {
+    background: red;
+  }
+}
+
+.title-span {
+  font-weight: bold;
+}
+
+/* Project edit form */
+#edit-project .project-title {
+  width: 100%;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+#edit-project .btn-form-wrapper {
+  margin-bottom: 1rem;
+  border-top: 2px dotted gray;
+  padding-top: 1rem;
 }

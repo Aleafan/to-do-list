@@ -1,6 +1,6 @@
 import { projects, createTask } from './data.js';
 import { recalcTaskNumber } from './navMenu.js';
-import { createTaskLi, setProgressDisplay, toggleTaskForm } from './project.js';
+import { createTaskLi, setProgressDisplay, toggleTaskForm, handleDeleteTask } from './project.js';
 import { createElemAttr, formatDate } from './helpers.js';
 import flatpickr from "flatpickr";
 
@@ -12,12 +12,20 @@ function createTaskForm(project, task) {
   const flexWrapper = createElemAttr('div', {class: 'flex-wrapper'});
   taskForm.appendChild(flexWrapper);
 
+  // Create check button
+  const completeValue = task && task.complete ? '1' : '';
+  const btnCheck = createElemAttr('button', 
+      {type: 'button', value: completeValue, 'aria-label': 'toggle-complete', class: 'btn-check', 'data-class': 'checked'});
+  if (completeValue) btnCheck.classList.add('checked');
+  btnCheck.appendChild(createElemAttr('i', {class: 'fas fa-check'}));
+  flexWrapper.appendChild(btnCheck);
+
   // Create title input
   const inputTitleId = task ? 'edit-title' : 'new-title';
   const inputTitleValue = task ? task.title : '';
   
   const labelTitle = createElemAttr('label', {for: inputTitleId, class: 'visuallyhidden'});
-  labelTitle.textContent = 'Task name';
+  labelTitle.textContent = 'Task title';
   flexWrapper.appendChild(labelTitle);
 
   const inputTitle = createElemAttr('input', 
@@ -27,7 +35,7 @@ function createTaskForm(project, task) {
   // Create priority button
   const priorityValue = task && task.priority ? '1' : '';
   const btnPriority = createElemAttr('button', 
-      {type: 'button', value: priorityValue, 'aria-label': 'set-priority', class: 'task-option'});
+      {type: 'button', value: priorityValue, 'aria-label': 'set-priority', class: 'task-option', 'data-class': 'active'});
   if (priorityValue) btnPriority.classList.add('active');
   btnPriority.appendChild(createElemAttr('i', {class: 'fas fa-flag'}));
   flexWrapper.appendChild(btnPriority);
@@ -86,7 +94,7 @@ function createTaskForm(project, task) {
   const selectProject = createElemAttr('select', {class: 'task-project', id: selectProjectId});
   taskProjectWrapper.appendChild(selectProject);
 
-  projects.forEach(proj => {
+  projects.list.forEach(proj => {
     const option = createElemAttr('option', {'value': proj.id});
     option.textContent = proj.title;
     if (project.id === proj.id) option.setAttribute('selected', '');
@@ -97,20 +105,20 @@ function createTaskForm(project, task) {
   const btnFormWrapper = createElemAttr('div', {class: 'btn-form-wrapper'});
   taskForm.appendChild(btnFormWrapper);
 
-  const btnSubmit = createElemAttr('button', {'type': 'submit', 'class': 'btn-form btn-submit'});
+  const btnSubmit = createElemAttr('button', {type: 'submit', class: 'btn-form btn-submit'});
   btnSubmit.textContent = 'Save';
   btnFormWrapper.appendChild(btnSubmit);
 
-  const btnCancel = createElemAttr('button', {'type': 'button', 'class': 'btn-form btn-cancel'});
+  const btnCancel = createElemAttr('button', {type: 'button', class: 'btn-form btn-cancel'});
   btnCancel.textContent = 'Cancel';
   btnFormWrapper.appendChild(btnCancel);
 
   // Add event listeners
-  inputTitle.addEventListener('focus', focusAtEnd);
+  btnCheck.addEventListener('click', toggleTaskState);
 
-  btnPriority.addEventListener('click', togglePriorityFlag);
+  btnPriority.addEventListener('click', toggleTaskState);
 
-  btnCancel.addEventListener('click', () => cancelTask(taskForm));
+  btnCancel.addEventListener('click', () => handleCancel(taskForm, project, task));
 
   taskForm.addEventListener('submit', (e) => { 
     e.preventDefault();
@@ -119,13 +127,6 @@ function createTaskForm(project, task) {
   });
 
   return taskForm;
-}
-
-
-function focusAtEnd() {
-  const value = this.value;
-  this.value = '';
-  this.value = value;
 }
 
 
@@ -147,22 +148,28 @@ function initFlatpickr(element, id, initialDate) {
 }
 
 
-function togglePriorityFlag() {
+function toggleTaskState() {
   if (this.value) {
     this.value = '';
-    this.classList.remove('active');
+    this.classList.remove(this.dataset.class);
   } else {
     this.value = '1';
-    this.classList.add('active');
+    this.classList.add(this.dataset.class);
   }
 }
 
 
-function cancelTask(form) {
-  toggleTaskForm();
-  const btnPriority = form.querySelector('.task-option');
-  if (btnPriority.value) togglePriorityFlag.apply(btnPriority);
-  form.reset();
+function handleCancel(form, project, task) {
+  if (task) {
+    form.parentNode.replaceWith(createTaskLi(task, project));
+  } else {
+    toggleTaskForm();
+    const btnPriority = form.querySelector('.task-option');
+    const btnCheck = form.querySelector('.btn-check');
+    if (btnPriority.value) toggleTaskState.apply(btnPriority);
+    if (btnCheck.value) toggleTaskState.apply(btnCheck);
+    form.reset();
+  }  
 }
 
 
@@ -172,11 +179,13 @@ function createNewTask(form, project) {
   const dueDate = form.querySelector('.flatpickr-input').value;
   const btnPriority = form.querySelector('.task-option');
   const priority = btnPriority.value;
+  const btnCheck = form.querySelector('.btn-check');
+  const complete = btnCheck.value;
 
   const newProjectId = form.querySelector('.task-project').value;
-  const newProject = projects.find(currProject => currProject.id === newProjectId);
+  const newProject = projects.list.find(currProject => currProject.id === newProjectId);
 
-  const task = createTask(title, notes, dueDate, priority);
+  const task = createTask(title, notes, dueDate, priority, complete);
 
   newProject.addTask(task);
   
@@ -187,7 +196,8 @@ function createNewTask(form, project) {
   }
   recalcTaskNumber(newProject);
   toggleTaskForm();
-  if (priority) togglePriorityFlag.apply(btnPriority);
+  if (priority) toggleTaskState.apply(btnPriority);
+  if (complete) toggleTaskState.apply(btnCheck);
   form.reset();
 }
 
@@ -197,20 +207,17 @@ function editTask(form, task, project) {
   task.notes = form.querySelector('.task-notes').value;
   task.dueDate = form.querySelector('.flatpickr-input').value;
   task.priority = form.querySelector('.task-option').value ? true : false;
+  task.complete = form.querySelector('.btn-check').value ? true : false;
 
   const newProjectId = form.querySelector('.task-project').value;
-  const newProject = projects.find(currProject => currProject.id === newProjectId);
-
+  const newProject = projects.list.find(currProject => currProject.id === newProjectId);
   if (newProjectId === project.id) {
     form.parentNode.replaceWith(createTaskLi(task, project));
   } 
   else {
-    project.tasks.splice(project.tasks.indexOf(task), 1);
+    handleDeleteTask(task, project, form.parentNode);
     newProject.addTask(task);
-    recalcTaskNumber(project);
     recalcTaskNumber(newProject);
-    form.parentNode.remove();
-    setProgressDisplay(project);
   }
 }
 

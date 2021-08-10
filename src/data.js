@@ -73,14 +73,21 @@ const vacation = {
   addTask(task) {
     this.tasks.push(task);
   },
+  deleteTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  },
   calcProgress() {
+    const tasksNum = this.calcTasks();
+    if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
-    if (task.complete) completed++;
+      if (task.complete) completed++;
     });
-    const progress = Math.round(completed / this.tasks.length * 100);
-    return progress;
-  },  
+    return Math.round(completed / tasksNum * 100);
+  },
+  calcTasks() {
+    return this.tasks.length;
+  },
 }
 const exercise = {
   id: 'acurlpj9pg',
@@ -139,14 +146,21 @@ const exercise = {
   addTask(task) {
     this.tasks.push(task);
   },
+  deleteTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  },
   calcProgress() {
+    const tasksNum = this.calcTasks();
+    if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
-    if (task.complete) completed++;
+      if (task.complete) completed++;
     });
-    const progress = Math.round(completed / this.tasks.length * 100);
-    return progress;
-  }, 
+    return Math.round(completed / tasksNum * 100);
+  },
+  calcTasks() {
+    return this.tasks.length;
+  },
 }
 const health = {
   id: 'ayl9h1qd67',
@@ -205,14 +219,21 @@ const health = {
   addTask(task) {
     this.tasks.push(task);
   },
+  deleteTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  },
   calcProgress() {
+    const tasksNum = this.calcTasks();
+    if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
-    if (task.complete) completed++;
+      if (task.complete) completed++;
     });
-    const progress = Math.round(completed / this.tasks.length * 100);
-    return progress;
-  }, 
+    return Math.round(completed / tasksNum * 100);
+  },
+  calcTasks() {
+    return this.tasks.length;
+  },
 }
 const house = {
   id: 'a9yorb54d2',
@@ -255,18 +276,52 @@ const house = {
   addTask(task) {
     this.tasks.push(task);
   },
+  deleteTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  },
   calcProgress() {
+    const tasksNum = this.calcTasks();
+    if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
-    if (task.complete) completed++;
+      if (task.complete) completed++;
     });
-    const progress = Math.round(completed / this.tasks.length * 100);
-    return progress;
-  }, 
+    return Math.round(completed / tasksNum * 100);
+  },
+  calcTasks() {
+    return this.tasks.length;
+  },
 }
 
-function createTask(title, notes, dueDate, priority) {
+function createProject(title) {
+  const id = uniqueId();
+  const addTask = (task) => project.tasks.push(task);
+  const deleteTask = (task) => project.tasks.splice(project.tasks.indexOf(task), 1);
+  const calcTasks = () => project.tasks.length;
+  const calcProgress = () => {
+    const tasksNum = project.calcTasks();
+    if (tasksNum === 0) return 0;
+    let completed = 0;
+    project.tasks.forEach(task => {
+      if (task.complete) completed++;
+    });
+    return Math.round(completed / tasksNum * 100);
+  };
+  const project = {
+    id,
+    title,
+    tasks: [],
+    addTask,
+    deleteTask,
+    calcTasks,
+    calcProgress,
+  }
+  return project;
+}
+
+function createTask(title, notes, dueDate, priority, complete) {
   priority = priority ? true : false;
+  complete = complete ? true : false;
   const togglePriority = () => task.priority = !task.priority;
   const toggleComplete = () => task.complete = !task.complete;
   const changeDate = (date) => task.dueDate = date;
@@ -275,7 +330,7 @@ function createTask(title, notes, dueDate, priority) {
     notes,
     dueDate,
     priority,
-    complete: false,
+    complete,
     togglePriority,
     toggleComplete,
     changeDate,
@@ -283,6 +338,11 @@ function createTask(title, notes, dueDate, priority) {
   return task;
 }
 
-const projects = [vacation, exercise, health, house];
+const projects = {
+  list: [vacation, exercise, health, house],
+  addProject(project) {
+    this.list.push(project);
+  }
+} ;
 
-export { projects, createTask };
+export { projects, createTask, createProject };

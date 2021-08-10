@@ -1,29 +1,20 @@
 import { toggleNav } from './navMenu.js';
-import { setAttributes } from './helpers.js';
+import { createElemAttr } from './helpers.js';
 
 function createHeader() {
-  const header = document.createElement('header');
-  header.setAttribute('id', 'app-header');
+  const header = createElemAttr('header', {id: 'app-header'});
 
   const h1 = document.createElement('h1');
+  h1.appendChild(createElemAttr('i', {class: 'far fa-check-square'}));
+  h1.appendChild(document.createTextNode(' To-do List'));
   header.appendChild(h1);
 
-  const iconTitle = document.createElement('i');
-  iconTitle.classList.add('far', 'fa-check-square');
-  h1.appendChild(iconTitle);
-
-  const h1Text = document.createTextNode(' To-do List');
-  h1.appendChild(h1Text);
-
-  const button = document.createElement('button');
-  setAttributes(button, {'type': 'button', 'id': 'nav-toggler', 'aria-label': 'toggle-menu'});
+  const button = createElemAttr('button', {type: 'button', id: 'nav-toggler', 'aria-label': 'toggle-menu'});
+  button.appendChild(createElemAttr('i', {class: 'fas fa-bars'}));
   header.appendChild(button);
 
+  // Event listeners
   button.addEventListener('click', toggleNav);
-
-  const iconToggler = document.createElement('i');
-  iconToggler.classList.add('fas', 'fa-bars');
-  button.appendChild(iconToggler);
 
   return header;
 }

@@ -7,13 +7,6 @@ function uniqueId() {
 }
 
 
-function setAttributes(element, attributes) {
-  for (const key in attributes) {
-    element.setAttribute(key, attributes[key]);
-  }
-}
-
-
 function createElemAttr(element, attributes) {
   const newElement = document.createElement(element);
   for (const key in attributes) {
@@ -34,4 +27,12 @@ function formatDate(dateStr) {
 }
 
 
-export { uniqueId, setAttributes, createElemAttr, formatDate };
+function focusAtEnd(element) {
+  element.focus();
+  const value = element.value;
+  element.value = '';
+  element.value = value;
+}
+
+
+export { uniqueId, createElemAttr, formatDate, focusAtEnd };

@@ -4,9 +4,7 @@ function loadInterface(element) {
 
 function loadContent(content) {
   const previousContent = document.querySelector('main');
-  if (previousContent) {
-    document.body.removeChild(previousContent);
-  }
+  if (previousContent) previousContent.remove();
   document.body.appendChild(content);
   document.body.classList.remove('nav-positioner');
 }

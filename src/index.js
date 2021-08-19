@@ -1,11 +1,9 @@
-import { loadInterface, loadContent } from './domChange.js';
-import { createHeader } from './header.js';
-import { createNavMenu } from './navMenu.js';
-import { createProjectPage } from './project.js';
-import { projects } from './data.js';
-
+import { loadInterface, loadContent } from './domChange';
+import { createHeader } from './header';
+import { createNavMenu } from './navMenu';
+import { createTodayPage } from './today';
 
 loadInterface(createHeader());
 loadInterface(createNavMenu());
 
-loadContent(createProjectPage(projects.list[0]));
+loadContent(createTodayPage());

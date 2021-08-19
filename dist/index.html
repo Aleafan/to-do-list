@@ -1,156 +1,167 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>To Do List</title>
 
-    <link href="../node_modules/flatpickr/dist/themes/dark.css" rel="stylesheet">
-    <link href="../src/styles/normalize.css" rel="stylesheet">
-		<link href="../src/styles/style.css" rel="stylesheet">
+    <link
+      href="../node_modules/flatpickr/dist/themes/dark.css"
+      rel="stylesheet"
+    />
+    <link href="../src/styles/normalize.css" rel="stylesheet" />
+    <link href="../src/styles/style.css" rel="stylesheet" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <script src="https://kit.fontawesome.com/3568576df5.js" crossorigin="anonymous"></script>
 
-    <script src='./main.js' defer></script>
+    <script src="./main.js" defer></script>
   </head>
 
   <body>
-    <template id='menu'>
-      <header id='app-header'>
+    <template id="menu">
+      <header id="app-header">
         <h1>
           <i class="far fa-check-square"></i>
           To-do List
         </h1>
-        <button aria-label='toggle-menu' id='nav-toggler' type='button'>
+        <button aria-label="toggle-menu" id="nav-toggler" type="button">
           <i class="fas fa-bars"></i>
         </button>
       </header>
-      <div id='nav-wrapper'>
-        <section id='nav-menu'>
-          <ul id='nav-timeline'>
+      <div id="nav-wrapper">
+        <section id="nav-menu">
+          <ul id="nav-timeline">
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>Today</span>
                 <span>4</span>
               </button>
             </li>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>This week</span>
                 <span>8</span>
               </button>
             </li>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>All tasks</span>
                 <span>15</span>
               </button>
             </li>
           </ul>
-          <ul id='nav-projects'>
+          <ul id="nav-projects">
             <h2>Projects</h2>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>Vacation in Rome</span>
                 <span>6</span>
-            </button>
+              </button>
             </li>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>Exercise</span>
                 <span>3</span>
               </button>
             </li>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>Health</span>
                 <span>4</span>
               </button>
             </li>
             <li>
-              <button class='btn-menu btn-flex' type='button'>
+              <button class="btn-menu btn-flex" type="button">
                 <span>House</span>
                 <span>3</span>
               </button>
             </li>
           </ul>
-          <div id='project-form-wrapper'>
-            <form id='project-form'>
-              <label for="project-title" class='visuallyhidden'>Project name</label>
-              <input type="text" class="project-title" placeholder="Project name" required>
-    
-              <button type="submit" class='task-option' aria-label='add-new-project'>
+          <div id="project-form-wrapper">
+            <form id="project-form">
+              <label for="project-title" class="visuallyhidden"
+                >Project name</label
+              >
+              <input
+                type="text"
+                class="project-title"
+                placeholder="Project name"
+                required
+              />
+
+              <button
+                type="submit"
+                class="task-option"
+                aria-label="add-new-project"
+              >
                 <i class="fas fa-plus"></i>
               </button>
             </form>
-            <button class='btn-menu btn-add' type='button'>
-              Add project
-            </button>
+            <button class="btn-menu btn-add" type="button">Add project</button>
           </div>
         </section>
       </div>
     </template>
 
-    <template id='options-container'>
-      <div id='popup-wrapper'>
-        <ul id='project-options'>
+    <template id="options-container">
+      <div id="popup-wrapper">
+        <ul id="project-options">
           <li>
-            <button type='button'>Edit project</button>  
+            <button type="button">Edit project</button>
           </li>
           <li>
-            <button type='button'>Delete completed tasks</button>  
+            <button type="button">Delete completed tasks</button>
           </li>
           <li>
-            <button type='button'>Delete project</button>  
+            <button type="button">Delete project</button>
           </li>
         </ul>
       </div>
     </template>
 
-
-    <template class='project-page'>
+    <template class="today-page">
       <main>
-        <header>
-          <h3>Vacation in Rome</h3>
-          <button class='btn-options' type='button' aria-label='show-options'>
-            <i class="fas fa-ellipsis-h"></i>
-          </button>
+        <header id="header-today">
+          <h3>Today</h3>
+          <p>Aug 12</p>
         </header>
-
-        <progress max="100" value="70"> 70% </progress>
-
-        <p>We'll go from June 14-22 and visit Rome, Siena and Florence</p>
-
-        <ul class='task-list'>
-          <li class='checked'>
-            <div class='task-main'>
-              <button class='btn-check' type='button' aria-label='complete-task'>
+        <ul class="task-list">
+          <li class="checked">
+            <div class="task-main">
+              <button
+                class="btn-check"
+                type="button"
+                aria-label="complete-task"
+              >
                 <i class="fas fa-check"></i>
               </button>
               Book flight
             </div>
           </li>
           <li>
-            <button class='btn-check' type='button' aria-label='complete-task'>
+            <button class="btn-check" type="button" aria-label="complete-task">
               <i class="fas fa-check"></i>
             </button>
             Read about the metro
-            <span class='due-date'>Sep 28</span>
+            <span class="due-date">Sep 28</span>
           </li>
-          <li class='checked'>
-            <button class='btn-check' type='button' aria-label='complete-task'>
+          <li class="checked">
+            <button class="btn-check" type="button" aria-label="complete-task">
               <i class="fas fa-check"></i>
             </button>
             Buy travel guide
-            <span class='due-date'>Sep 10</span>
+            <span class="due-date">Sep 10</span>
           </li>
           <li>
-            <button class='btn-check' type='button' aria-label='complete-task'>
+            <button class="btn-check" type="button" aria-label="complete-task">
               <i class="fas fa-check"></i>
             </button>
             Book hotel room
@@ -159,41 +170,120 @@
       </main>
     </template>
 
-    <template id='add-task'>
-      <div id='task-form-wrapper'>
-        <form id='new-task-form'>
-          <div class='flex-wrapper'>
-            <button class='btn-check' type='button' value='' aria-label='toggle-complete'>
+    <template class="project-page">
+      <main>
+        <header>
+          <h3>Vacation in Rome</h3>
+          <button class="btn-options" type="button" aria-label="show-options">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </header>
+
+        <progress max="100" value="70">70%</progress>
+
+        <p>We'll go from June 14-22 and visit Rome, Siena and Florence</p>
+
+        <ul class="task-list">
+          <li class="checked">
+            <div class="task-main">
+              <button
+                class="btn-check"
+                type="button"
+                aria-label="complete-task"
+              >
+                <i class="fas fa-check"></i>
+              </button>
+              Book flight
+            </div>
+          </li>
+          <li>
+            <button class="btn-check" type="button" aria-label="complete-task">
+              <i class="fas fa-check"></i>
+            </button>
+            Read about the metro
+            <span class="due-date">Sep 28</span>
+          </li>
+          <li class="checked">
+            <button class="btn-check" type="button" aria-label="complete-task">
+              <i class="fas fa-check"></i>
+            </button>
+            Buy travel guide
+            <span class="due-date">Sep 10</span>
+          </li>
+          <li>
+            <button class="btn-check" type="button" aria-label="complete-task">
+              <i class="fas fa-check"></i>
+            </button>
+            Book hotel room
+          </li>
+        </ul>
+      </main>
+    </template>
+
+    <template id="add-task">
+      <div id="task-form-wrapper">
+        <form id="new-task-form">
+          <div class="flex-wrapper">
+            <button
+              class="btn-check"
+              type="button"
+              value=""
+              aria-label="toggle-complete"
+            >
               <i class="fas fa-check"></i>
             </button>
 
-            <label for="task-title" class='visuallyhidden'>Task name</label>
-            <input type="text" class="task-title" placeholder="Task name" required>
+            <label for="task-title" class="visuallyhidden">Task name</label>
+            <input
+              type="text"
+              class="task-title"
+              placeholder="Task name"
+              required
+            />
 
-            <button class='task-option' type='button' value='0' aria-label='set-priority'>
+            <button
+              class="task-option"
+              type="button"
+              value="0"
+              aria-label="set-priority"
+            >
               <i class="fas fa-flag"></i>
             </button>
           </div>
-          
-          <label for='task-notes' class='visuallyhidden'>Task notes</label>
-          <textarea id="task-notes" rows="2" placeholder='Notes'></textarea>
 
-          <div class='form-options'>
+          <label for="task-notes" class="visuallyhidden">Task notes</label>
+          <textarea id="task-notes" rows="2" placeholder="Notes"></textarea>
+
+          <div class="form-options">
             <div class="flatpickr">
-              <button type='button' class="input-button" title="toggle" data-toggle aria-label='toggle-calendar'>
+              <button
+                type="button"
+                class="input-button"
+                title="toggle"
+                data-toggle
+                aria-label="toggle-calendar"
+              >
                 <i class="far fa-calendar-alt"></i>
               </button>
-      
-              <label for='task-date' class='visuallyhidden'>When</label>
-              <input type="text" id='task-date' placeholder="When" data-input>
-      
-              <button type='button' class="input-button" title="clear" data-clear aria-label='clear-date'>
+
+              <label for="task-date" class="visuallyhidden">When</label>
+              <input type="text" id="task-date" placeholder="When" data-input />
+
+              <button
+                type="button"
+                class="input-button"
+                title="clear"
+                data-clear
+                aria-label="clear-date"
+              >
                 <i class="fas fa-times"></i>
-              </button> 
+              </button>
             </div>
-            <div id='task-project-wrapper'>
-              <label for='task-project' class='visuallyhidden'>Select a project</label>
-              <select id='task-project'>
+            <div id="task-project-wrapper">
+              <label for="task-project" class="visuallyhidden"
+                >Select a project</label
+              >
+              <select id="task-project">
                 <option selected>Vacation in Italy</option>
                 <option>Exercise</option>
                 <option>Health</option>
@@ -201,74 +291,92 @@
               </select>
             </div>
           </div>
-          <div class='btn-form-wrapper'>
-            <button type="submit" class='btn-form btn-submit'>Save</button>
-            <button type="button" class='btn-form btn-cancel'>Cancel</button>
+          <div class="btn-form-wrapper">
+            <button type="submit" class="btn-form btn-submit">Save</button>
+            <button type="button" class="btn-form btn-cancel">Cancel</button>
           </div>
         </form>
 
-        <button class='btn-menu btn-add' type='button'>
-          New task
-        </button>
+        <button class="btn-menu btn-add" type="button">New task</button>
       </div>
     </template>
 
-    <template id='task-extend'>
-      <div class='task-extension'>
+    <template id="task-extend">
+      <div class="task-extension">
         <p>We'll go from 12 to 24 of June</p>
-        <div class='task-options'>
+        <div class="task-options">
           <div class="flatpickr">
-            <button type='button' class="input-button task-option" title="toggle" data-toggle aria-label='toggle-calendar'>
+            <button
+              type="button"
+              class="input-button task-option"
+              title="toggle"
+              data-toggle
+              aria-label="toggle-calendar"
+            >
               <i class="far fa-calendar-alt"></i>
             </button>
-  
-            <label class='visuallyhidden'>
+
+            <label class="visuallyhidden">
               When
-              <input type="text" class='visuallyhidden' placeholder="When" data-input>
+              <input
+                type="text"
+                class="visuallyhidden"
+                placeholder="When"
+                data-input
+              />
             </label>
           </div>
-  
-          <button class='task-option' type='button' aria-label='set-priority'>
+
+          <button class="task-option" type="button" aria-label="set-priority">
             <i class="fas fa-flag"></i>
           </button>
 
-          <button type='button' class='task-option' aria-label="edit-task">
+          <button type="button" class="task-option" aria-label="edit-task">
             <i class="fas fa-edit"></i>
           </button>
 
-          <button type='button' class='task-option' aria-label="delete-task">
+          <button type="button" class="task-option" aria-label="delete-task">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
       </div>
     </template>
 
-    <template id='confirmation'>
-      <div id='conf-wrapper'>
-        <div id='conf-delete'>
-          <p>Are you sure you want to delete task <span class='title-span'>"Book hotel room"</span>?</p>
-          <div class='btn-conf-wrapper'>
-            <button type="button" class='btn-form btn-delete'>Delete</button>
-            <button type="button" class='btn-form btn-cancel'>Cancel</button>
+    <template id="confirmation">
+      <div id="conf-wrapper">
+        <div id="conf-delete">
+          <p>
+            Are you sure you want to delete task
+            <span class="title-span">"Book hotel room"</span>?
+          </p>
+          <div class="btn-conf-wrapper">
+            <button type="button" class="btn-form btn-delete">Delete</button>
+            <button type="button" class="btn-form btn-cancel">Cancel</button>
           </div>
         </div>
       </div>
     </template>
 
-    <template id='project-form-template'>
-      <form id='edit-project'>
-        <label for="project-title" class='visuallyhidden'>Project name</label>
-        <input type="text" id='project-title' class="project-title" placeholder="Project name" value='Vacation in Italy' required>
-        
-        <label for='project-notes' class='visuallyhidden'>Project notes</label>
-        <textarea id="project-notes" rows="2" placeholder='Notes'></textarea>
+    <template id="project-form-template">
+      <form id="edit-project">
+        <label for="project-title" class="visuallyhidden">Project name</label>
+        <input
+          type="text"
+          id="project-title"
+          class="project-title"
+          placeholder="Project name"
+          value="Vacation in Italy"
+          required
+        />
 
-        <div class='btn-form-wrapper'>
-          <button type="submit" class='btn-form btn-submit'>Save</button>
-          <button type="button" class='btn-form btn-cancel'>Cancel</button>
+        <label for="project-notes" class="visuallyhidden">Project notes</label>
+        <textarea id="project-notes" rows="2" placeholder="Notes"></textarea>
+
+        <div class="btn-form-wrapper">
+          <button type="submit" class="btn-form btn-submit">Save</button>
+          <button type="button" class="btn-form btn-cancel">Cancel</button>
         </div>
       </form>
     </template>
-
   </body>
 </html>

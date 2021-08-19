@@ -10,17 +10,20 @@
   box-sizing: border-box;
 }
 
-html, body {
+html {
   height: 100%;
 }
 
 body {
-  font-family: 'Roboto Slab', serif;
+  min-height: 100%;
+  position: relative;
+  font-family: "Roboto Slab", serif;
   scroll-behavior: smooth;
   padding-top: var(--header-height, 55px);
 }
 
-h1, h3 {
+h1,
+h3 {
   margin: 0;
 }
 
@@ -34,13 +37,13 @@ button {
 @media (min-width: 750px) {
   body {
     padding-left: 300px;
-    transition: all 0.4s ease-out; 
+    transition: all 0.4s ease-out;
   }
 }
 @media (min-width: 1050px) {
-    body {
-      padding-left: 350px;
-    }
+  body {
+    padding-left: 350px;
+  }
 }
 
 #app-header {
@@ -53,8 +56,8 @@ button {
   height: var(--header-height, 55px);
   color: white;
   background-color: darkblue;
-  padding: 0 0.7rem;
-  z-index: 4;
+  padding: 0 1rem;
+  z-index: 5;
 }
 @media (min-width: 750px) {
   #app-header {
@@ -72,7 +75,7 @@ h1 {
   left: -760px;
   width: 100vw;
   height: 100%;
-  z-index: 3;
+  z-index: 4;
   background-color: rgba(0, 0, 0, 0.75);
   transition: all 0.3s ease-out;
 }
@@ -101,9 +104,9 @@ body.nav-positioner #nav-wrapper {
 #nav-menu {
   width: 300px;
   height: 100%;
-  box-shadow: 3px 0 3px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.75);
   padding-top: 3rem;
-  background-color: white;
+  background-color: whitesmoke;
   overflow: auto;
 }
 @media (min-width: 1050px) {
@@ -128,8 +131,8 @@ body.nav-positioner #nav-wrapper {
   align-items: center;
   padding: 0.8rem 1rem;
 }
-.btn-flex:hover, 
-#nav-menu>.btn-add:hover,
+.btn-flex:hover,
+#nav-menu > .btn-add:hover,
 .btn-proj-option:hover {
   background-color: #eae5e5;
 }
@@ -186,7 +189,7 @@ body.nav-positioner #nav-wrapper {
   line-height: 2rem;
 }
 .btn-add::before {
-  content: '+';
+  content: "+";
   position: relative;
   top: 3px;
   font-size: 1.8rem;
@@ -202,11 +205,11 @@ main {
   width: 100%;
   max-width: 750px;
   margin: 0 auto;
-  padding: 1.2rem 0.5rem;
+  padding: 1rem 0.7rem;
 }
 @media (min-width: 750px) {
   main {
-    padding: 2rem;
+    padding: 2rem 2rem;
   }
 }
 
@@ -248,7 +251,7 @@ progress {
   width: 100%;
   height: 100%;
   background: transparent;
-  z-index: 5;
+  z-index: 6;
 }
 
 #project-options {
@@ -275,7 +278,7 @@ progress {
 }
 
 .task-list {
-  margin: 1rem -0.5rem 0.5rem;
+  margin: 1rem -0.5rem 0;
 }
 
 .task-list li {
@@ -287,6 +290,7 @@ progress {
 
 .task-main {
   display: flex;
+  align-items: center;
 }
 
 .task-list li:last-child {
@@ -296,6 +300,7 @@ progress {
 li.checked .task-main {
   text-decoration: line-through;
   color: grey;
+  font-weight: 400;
 }
 
 li.priority {
@@ -304,19 +309,40 @@ li.priority {
 
 li.edit-mode {
   cursor: auto;
+  margin: 0 -0.5rem;
+  padding: 1rem 1.1rem;
+}
+
+li.edit-mode,
+.edit-mode {
+  position: relative;
+  z-index: 3;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 0 1px 1px lightgrey;
 }
 
 .fa-check {
   color: white;
   border-radius: 5px;
-  box-shadow: 0 0 2px 2px gray;
-  padding: 2px;
-  vertical-align: text-top;
-  font-size: 0.8rem;
+  border: 2px solid grey;
+  font-size: 0.9rem;
 }
 
 .checked .fa-check {
   background: blue;
+  border: 2px solid blue;
+  animation-duration: 0.2s;
+}
+@keyframes check {
+  0% {
+    box-shadow: 0 0 1px 2px lightsteelblue;
+    background: white;
+    border: 2px solid grey;
+  }
+  50% {
+    box-shadow: 0 0 4px 5px lightsteelblue;
+  }
 }
 
 .btn-check {
@@ -325,7 +351,6 @@ li.edit-mode {
   cursor: pointer;
   padding: 0;
   margin-right: 0.5rem;
-  align-self: center;
 }
 
 .due-date {
@@ -347,22 +372,30 @@ li.edit-mode {
 }
 
 main .btn-add {
-  padding-left: 0.1rem;
+  padding-left: 0.6rem;
+  padding-top: 0.2rem;
   -webkit-tap-highlight-color: transparent;
+}
+
+main .show-form .btn-add {
+  display: none;
+}
+
+#task-form-wrapper {
+  margin: 0 -1rem;
+  padding: 0 0.5rem;
 }
 
 #new-task-form {
   max-height: 0;
   overflow: hidden;
   transition: all 0.4s ease-out;
-  margin: 0 -0.5rem;
   padding: 0 0.6rem;
 }
 
 .show-form #new-task-form {
   max-height: 300px;
-  border-bottom: 1px solid gray;
-  padding: 0.3rem 0.6rem 1rem;
+  padding: 0.8rem 0.6rem 1rem;
 }
 
 .show-form .btn-add {
@@ -370,7 +403,7 @@ main .btn-add {
 }
 
 .show-form .btn-add::before {
-  content: '-';
+  content: "-";
 }
 
 .flex-wrapper {
@@ -378,14 +411,13 @@ main .btn-add {
   align-items: center;
 }
 
-.task-title, .project-title {
+.task-title,
+.project-title {
   border: none;
-}
-
-.task-title, .project-title {
   flex-grow: 1;
   padding: 0;
   min-width: 0;
+  background: inherit;
 }
 
 .task-notes {
@@ -407,7 +439,7 @@ main .btn-add {
   }
 }
 
-.task-option[aria-label='edit-task'] {
+.task-option[aria-label="edit-task"] {
   margin-left: 0.5rem;
 }
 
@@ -438,8 +470,8 @@ textarea {
 }
 
 input.task-title:focus,
-input.project-title:focus, 
-input.form-control:focus, 
+input.project-title:focus,
+input.form-control:focus,
 textarea:focus {
   outline: none;
 }
@@ -459,11 +491,10 @@ form .flatpickr:focus-within {
   }
 }
 @media (hover: hover) and (pointer: fine) {
-  form .flatpickr>*:hover {
+  form .flatpickr > *:hover {
     background: #e1e0e0;
   }
 }
-
 
 .form-control {
   border: none;
@@ -489,6 +520,7 @@ form .flatpickr:focus-within {
 
 .btn-form-wrapper {
   display: flex;
+  justify-content: flex-end;
 }
 
 .btn-form {
@@ -513,6 +545,7 @@ form .flatpickr:focus-within {
 .btn-cancel {
   box-shadow: 0 0 1px 1px grey;
   transition: 0.2s ease-out;
+  background: white;
 }
 @media (hover: hover) and (pointer: fine) {
   .btn-cancel:hover {
@@ -576,8 +609,8 @@ select.task-project {
   z-index: 1;
 }
 
-.task-project-wrapper::before, 
-.task-project-wrapper::after, 
+.task-project-wrapper::before,
+.task-project-wrapper::after,
 select.task-project {
   grid-area: select;
 }
@@ -589,13 +622,14 @@ select.task-project {
   margin-left: 1.5rem;
 }
 
-[aria-expanded='true'] .task-extension {
+[aria-expanded="true"] .task-extension {
   max-height: 200px;
   padding: 0;
 }
 
 .task-extension p {
-  margin: 0.7rem 0;
+  margin: 0.5rem 0 0.7rem;
+  color: #524f4f;
 }
 
 .task-options {
@@ -624,15 +658,19 @@ select.task-project {
   cursor: auto;
 }
 @keyframes appear {
-  from { transform: scale(0.5); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0.5);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 #conf-delete {
   max-width: 600px;
   background: whitesmoke;
   border-radius: 10px;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1rem;
 }
 
 #conf-delete p {
@@ -666,6 +704,11 @@ select.task-project {
 }
 
 /* Project edit form */
+#edit-project {
+  padding: 1rem 1rem 1rem;
+  margin: -1rem -1rem 0.7rem;
+}
+
 #edit-project .project-title {
   width: 100%;
   font-size: 1.6rem;
@@ -673,7 +716,45 @@ select.task-project {
 }
 
 #edit-project .btn-form-wrapper {
-  margin-bottom: 1rem;
   border-top: 2px dotted gray;
   padding-top: 1rem;
+}
+
+/* Page wrapper when forms are active */
+.form-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(165, 165, 165, 0.2);
+  z-index: 2;
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+/* Today page */
+#header-today {
+  display: flex;
+  align-items: baseline;
+}
+
+#header-today p {
+  margin: 0 0 0 1rem;
+  color: gray;
+}
+
+.project-name {
+  /* text-align: end; */
+  color: gray;
+  font-size: 0.8rem;
+  margin: 0 0 0 1.6rem;
+}
+
+.project-name i {
+  font-size: 0.5rem;
+  margin-right: 0.2rem;
+  vertical-align: middle;
 }

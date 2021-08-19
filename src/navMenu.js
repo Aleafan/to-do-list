@@ -2,8 +2,9 @@ import { projects, createProject } from './data.js';
 import { createProjectPage } from './project.js';
 import { loadContent } from './domChange.js';
 import { createElemAttr } from './helpers.js';
+import { createTodayPage } from './today.js';
 
-const timeline = ['Today', 'This week', 'All tasks'];
+const timeline = ['This week', 'All tasks'];
 
 function createNavMenu() {
   const navWrapper = createElemAttr('div', {id: 'nav-wrapper'});
@@ -13,6 +14,20 @@ function createNavMenu() {
 
   const navTimeline = createElemAttr('ul', {id: 'nav-timeline'});
   navMenu.appendChild(navTimeline);
+
+  const li = createElemAttr('li', { id: 'today' });
+  navTimeline.appendChild(li);
+
+  const btnToday = createElemAttr('button', {class: 'btn-menu btn-flex', type: 'button'});
+  li.appendChild(btnToday);
+
+  const span1 = document.createElement('span');
+  span1.textContent = 'Today';
+
+  const span2 = createElemAttr('span', { class: 'task-number' });
+  span2.textContent = projects.findTodayTasks().calcTasks();
+
+  btnToday.append(span1, span2);
 
   timeline.forEach(time => {
     const li = document.createElement('li');
@@ -71,6 +86,8 @@ function createNavMenu() {
 
   form.addEventListener('submit', handleSubmit);
 
+  btnToday.addEventListener('click', () => loadContent(createTodayPage()));
+
   return navWrapper;
 }
 
@@ -82,7 +99,7 @@ function createProjectButton(project, domParent) {
   button.appendChild(createElemAttr('i', {class: 'fas fa-square project-icon'}));
   li.appendChild(button);
 
-  const spanTitle = document.createElement('span');
+  const spanTitle = createElemAttr('span', {class: 'span-title'});
   spanTitle.textContent = project.title;
   button.appendChild(spanTitle);
 
@@ -119,8 +136,8 @@ function toggleProjectForm() {
 }
 
 function recalcTaskNumber(project) {
-  const navProjects = document.getElementById('nav-projects');
-  const spanNumber = navProjects.querySelector(`#${project.id} .task-number`);
+  const navMenu = document.getElementById('nav-menu');
+  const spanNumber = navMenu.querySelector(`#${project.id} .task-number`);
   spanNumber.textContent = project.calcTasks();
 }
 

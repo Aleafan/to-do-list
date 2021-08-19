@@ -1,11 +1,9 @@
 import { parse, format, isToday, isTomorrow, isThisYear, isPast } from 'date-fns';
 
-
 // Unique ID generator (based on https://gist.github.com/gordonbrander/2230317#file-id-js)
 function uniqueId() {
   return 'a' + Math.random().toString(36).substr(2, 9);
 }
-
 
 function createElemAttr(element, attributes) {
   const newElement = document.createElement(element);
@@ -14,7 +12,6 @@ function createElemAttr(element, attributes) {
   }
   return newElement;
 }
-
 
 function formatDate(dateStr) {
   const parsedDate = parse(dateStr, "MMM d yyyy", new Date());
@@ -26,6 +23,10 @@ function formatDate(dateStr) {
   return { date, expired };
 }
 
+function isDueDateToday(dueDate) {
+  const parsedDate = parse(dueDate, "MMM d yyyy", new Date());
+  return isToday(parsedDate);
+}
 
 function focusAtEnd(element) {
   element.focus();
@@ -34,5 +35,18 @@ function focusAtEnd(element) {
   element.value = value;
 }
 
+function setProgressDisplay(project, progress) {
+  if (!progress) {
+    progress = document.querySelector('progress');
+    if (!progress) return;
+  }
+  const progressValue = project.calcProgress();
+  progress.setAttribute('value', progressValue);
+  progress.textContent = `${progressValue} %`;
+}
 
-export { uniqueId, createElemAttr, formatDate, focusAtEnd };
+function getToday() {
+  return format(Date.now(), 'EEE, MMM d');
+}
+
+export { uniqueId, createElemAttr, formatDate, isDueDateToday, focusAtEnd, setProgressDisplay, getToday };

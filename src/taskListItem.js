@@ -163,7 +163,17 @@ function handleCheck(li, task, project, viewType) {
   } else {
     li.classList.remove('checked');
   }
-  setProgressDisplay(viewType === 'project' ? project : projects.findTodayTasks());
+  if (viewType === 'project') {
+    setProgressDisplay(project);
+    if (isDueDateToday(task.dueDate)) {
+      recalcTaskNumber(projects.findTodayTasks());
+    }
+  } else if (viewType === 'today') {
+    const todayProject = projects.findTodayTasks();
+    setProgressDisplay(todayProject);
+    recalcTaskNumber(todayProject);
+  }
+  recalcTaskNumber(project);
 }
 
 function handlePriority(e, task, button, li) {

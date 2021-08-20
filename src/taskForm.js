@@ -94,16 +94,11 @@ function createTaskForm(viewType, project, task) {
     "aria-label": "toggle-calendar",
     class: "input-button",
   });
-  btnCalendar.appendChild(
-    createElemAttr("i", { class: "far fa-calendar-alt" })
-  );
+  btnCalendar.appendChild(createElemAttr("i", { class: "far fa-calendar-alt" }));
   datePicker.appendChild(btnCalendar);
 
   const inputDateId = task ? "edit-date" : "new-date";
-  const labelDate = createElemAttr("label", {
-    for: inputDateId,
-    class: "visuallyhidden",
-  });
+  const labelDate = createElemAttr("label", { for: inputDateId, class: "visuallyhidden" });
   labelDate.textContent = "When";
   datePicker.appendChild(labelDate);
 
@@ -121,7 +116,9 @@ function createTaskForm(viewType, project, task) {
   datePicker.appendChild(btnClearDate);
 
   // - Initialize flatpickr instance
-  const initialDate = task ? task.dueDate : null;
+  const initialDate = task ? task.dueDate 
+      : viewType === 'today' ? 'today' 
+      : null;
   initFlatpickr(datePicker, inputDateId, initialDate);
 
   // - Create project selection menu
@@ -288,8 +285,8 @@ function editTask(form, task, project, viewType) {
     } else {
       handleDeleteTask(task, project, form.parentNode);
       newProject.addTask(task);
-      recalcTaskNumber(newProject);
     }
+    recalcTaskNumber(newProject);
     if (isDueDateToday(prevDate) || isDueDateToday(task.dueDate)) {
       recalcTaskNumber(projects.findTodayTasks());
     }
@@ -297,15 +294,15 @@ function editTask(form, task, project, viewType) {
     if (newProjectId !== project.id) {
       handleDeleteTask(task, project);
       newProject.addTask(task);
-      recalcTaskNumber(newProject);
     }
     if (!isDueDateToday(task.dueDate)) {
       form.parentNode.remove();
-      recalcTaskNumber(projects.findTodayTasks());
     } else {
       form.parentNode.replaceWith(createTaskLi(task, newProject, "today"));
       setProgressDisplay(projects.findTodayTasks());
     }
+    recalcTaskNumber(newProject);
+    recalcTaskNumber(projects.findTodayTasks());
   }
   document.querySelector(".form-overlay").classList.remove("show");
 }

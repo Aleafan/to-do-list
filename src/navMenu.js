@@ -25,7 +25,7 @@ function createNavMenu() {
   span1.textContent = 'Today';
 
   const span2 = createElemAttr('span', { class: 'task-number' });
-  span2.textContent = projects.findTodayTasks().calcTasks();
+  span2.textContent = projects.findTodayTasks().calcActiveTasks();
 
   btnToday.append(span1, span2);
 
@@ -104,7 +104,7 @@ function createProjectButton(project, domParent) {
   button.appendChild(spanTitle);
 
   const spanNumber = createElemAttr('span', {class: 'task-number'});
-  spanNumber.textContent = project.tasks.length;
+  spanNumber.textContent = project.calcActiveTasks();
   button.appendChild(spanNumber);
   
   button.addEventListener('click', () => loadContent(createProjectPage(project)));
@@ -138,7 +138,7 @@ function toggleProjectForm() {
 function recalcTaskNumber(project) {
   const navMenu = document.getElementById('nav-menu');
   const spanNumber = navMenu.querySelector(`#${project.id} .task-number`);
-  spanNumber.textContent = project.calcTasks();
+  spanNumber.textContent = project.calcActiveTasks();
 }
 
 export { createNavMenu, toggleNav, recalcTaskNumber };

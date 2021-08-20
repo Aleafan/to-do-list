@@ -8,7 +8,7 @@ const vacation = {
     {
       title: 'Book flight',
       notes: 'Flight during the day',
-      dueDate: 'Aug 19 2021',
+      dueDate: 'Aug 20 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -70,14 +70,17 @@ const vacation = {
       },
     },
   ],
+
   addTask(task) {
     this.tasks.push(task);
   },
+
   deleteTask(task) {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
+
   calcProgress() {
-    const tasksNum = this.calcTasks();
+    const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
@@ -85,9 +88,11 @@ const vacation = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
-  calcTasks() {
-    return this.tasks.length;
+
+  calcActiveTasks() {
+    return this.tasks.filter(task => !task.complete).length;
   },
+  
   deleteCompleted() {
     this.tasks = this.tasks.filter((task) => !task.complete);
   },
@@ -116,7 +121,7 @@ const exercise = {
     {
       title: 'Exercise on the bar',
       notes: '',
-      dueDate: 'Aug 19 2021',
+      dueDate: 'Aug 20 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -153,7 +158,7 @@ const exercise = {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
   calcProgress() {
-    const tasksNum = this.calcTasks();
+    const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach((task) => {
@@ -161,8 +166,8 @@ const exercise = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
-  calcTasks() {
-    return this.tasks.length;
+  calcActiveTasks() {
+    return this.tasks.filter(task => !task.complete).length;
   },
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
@@ -176,7 +181,7 @@ const health = {
     {
       title: 'Have healthy diet',
       notes: '',
-      dueDate: 'Aug 19 2021',
+      dueDate: 'Aug 20 2021',
       priority: false,
       complete: true,
       togglePriority() {
@@ -192,7 +197,7 @@ const health = {
     {
       title: 'Reduce sugar consumption',
       notes: '',
-      dueDate: 'Aug 19 2021',
+      dueDate: 'Aug 20 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -229,7 +234,7 @@ const health = {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
   calcProgress() {
-    const tasksNum = this.calcTasks();
+    const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
@@ -237,8 +242,8 @@ const health = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
-  calcTasks() {
-    return this.tasks.length;
+  calcActiveTasks() {
+    return this.tasks.filter(task => !task.complete).length;
   },
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
@@ -289,7 +294,7 @@ const house = {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
   calcProgress() {
-    const tasksNum = this.calcTasks();
+    const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
     let completed = 0;
     this.tasks.forEach(task => {
@@ -297,8 +302,8 @@ const house = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
-  calcTasks() {
-    return this.tasks.length;
+  calcActiveTasks() {
+    return this.tasks.filter(task => !task.complete).length;
   },
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
@@ -309,9 +314,9 @@ function createProject(title) {
   const id = uniqueId();
   const addTask = (task) => project.tasks.push(task);
   const deleteTask = (task) => project.tasks.splice(project.tasks.indexOf(task), 1);
-  const calcTasks = () => project.tasks.length;
+  const calcActiveTasks = () => project.tasks.filter(task => !task.complete).length;
   const calcProgress = () => {
-    const tasksNum = project.calcTasks();
+    const tasksNum = project.tasks.length;
     if (tasksNum === 0) return 0;
     let completed = 0;
     project.tasks.forEach(task => {
@@ -326,7 +331,7 @@ function createProject(title) {
     tasks: [],
     addTask,
     deleteTask,
-    calcTasks,
+    calcActiveTasks,
     calcProgress,
     deleteCompleted,
   };
@@ -381,7 +386,7 @@ const projects = {
       tasks,
 
       calcProgress() {
-        const tasksNum = this.calcTasks();
+        const tasksNum = this.tasks.length;
         if (tasksNum === 0) return 0;
         let completed = 0;
         this.tasks.forEach(taskObj => {
@@ -390,8 +395,8 @@ const projects = {
         return Math.round((completed / tasksNum) * 100);
       },
 
-      calcTasks() {
-        return this.tasks.length;
+      calcActiveTasks() {
+        return this.tasks.filter(taskObj => !taskObj.task.complete).length;
       },
     };
     return todayProject;

@@ -4,7 +4,8 @@ import { createConfirmation } from './project.js';
 import { recalcTaskNumber } from './navMenu.js';
 import { createTaskForm } from './taskForm.js';
 import { projects } from './data.js';
-
+import { loadContent } from "./domChange.js";
+import { createUpcomingPage } from './upcoming.js';
 
 function createTaskLi(task, project, viewType) {
   const li = createElemAttr('li', {role: 'button', 'aria-expanded': 'false', tabindex: '0'});
@@ -59,10 +60,9 @@ function createTaskLi(task, project, viewType) {
     const dateSpan = createElemAttr('span', {class: 'due-date'});
     taskMain.appendChild(dateSpan);
     displayDate(task, dateSpan);
-    initFlatpickr(datePicker, task, li, dateSpan);
-  } else {
-    initFlatpickr(datePicker, task, li);
-  } 
+  }
+
+  initFlatpickr(datePicker, task, li, viewType);
 
   const btnPriority = createElemAttr('button', {type: 'button', class: 'task-option', 'aria-label': 'set-priority'});
   if (task.priority) btnPriority.classList.add('active');
@@ -116,27 +116,36 @@ function handleExtend(e) {
   }  
 }
 
-function initFlatpickr(element, task, li, dateElement) {
+function initFlatpickr(element, task, li, viewType) {
   flatpickr(element, {
     disableMobile: 'true',
     dateFormat: 'M j Y',
     defaultDate: task.dueDate,
+    minDate: 'today',
+    allowInvalidPreload: true,
+    locale: {
+      firstDayOfWeek: 1,
+    },
     wrap: true,
     onChange: (selDates, dateStr) => {
       const prevDate = task.dueDate;
       task.changeDate(dateStr);
-      // Project view case
-      if (dateElement) {
+      if (viewType === 'project') {
+        const dateElement = li.querySelector('.due-date');
         displayDate(task, dateElement);
         if (isDueDateToday(prevDate) || isDueDateToday(dateStr)) {
           recalcTaskNumber(projects.findTodayTasks());
         }
-      // Today view case
-      } else if (!isDueDateToday(dateStr)) {
+      } else if (viewType === 'today') {
         li.remove();
         const todayProject = projects.findTodayTasks();
         setProgressDisplay(todayProject);
         recalcTaskNumber(todayProject);
+      } else if (viewType === 'upcoming') {
+        if (isDueDateToday(dateStr)) {
+          recalcTaskNumber(projects.findTodayTasks());
+        }
+        loadContent(createUpcomingPage());
       }
     },
   });
@@ -229,11 +238,15 @@ function handleDeleteTask(task, project, li, viewType) {
   recalcTaskNumber(project);
   if (viewType === 'project') {
     setProgressDisplay(project);
-  } else if (viewType === 'today') {
-    setProgressDisplay(projects.findTodayTasks());
-  }
-  if (isDueDateToday(task.dueDate)) {
-    recalcTaskNumber(projects.findTodayTasks());
+    if (isDueDateToday(task.dueDate)) recalcTaskNumber(projects.findTodayTasks());
+  } 
+  else if (viewType === 'today') {
+    const todayProject = projects.findTodayTasks();
+    setProgressDisplay(todayProject);
+    recalcTaskNumber(todayProject);
+  }  
+  else if (viewType === 'upcoming') {
+    return loadContent(createUpcomingPage());
   }
   if (li) li.remove();
 }

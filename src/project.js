@@ -1,6 +1,6 @@
 import { createTaskForm, toggleTaskForm } from './taskForm.js';
 import { createTaskLi } from './taskListItem.js';
-import { recalcTaskNumber } from './navMenu.js';
+import { highlightActiveTab, recalcTaskNumber } from './navMenu.js';
 import { loadContent } from "./domChange.js";
 import { createElemAttr, focusAtEnd, setProgressDisplay } from './helpers.js';
 import { projects } from "./data.js";
@@ -53,7 +53,11 @@ function createProjectHeader(project) {
   const flexWrapper = createElemAttr('div', {class: 'flex-wrapper'});
 
   const h3 = document.createElement('h3');
-  h3.textContent = project.title;
+  if (project.id === 'inbox') {
+    h3.append(createElemAttr('i', { class: 'fas fa-inbox' }), project.title);
+  } else {
+    h3.textContent = project.title;
+  }
 
   const btnOptions = createElemAttr('button', {type: 'button', 'aria-label': 'show-options', class: 'btn-options'});
   btnOptions.appendChild(createElemAttr('i', {class: 'fas fa-ellipsis-h'}));
@@ -79,22 +83,34 @@ function showOptionsPopup(btnOptions, project) {
   const projOptions = createElemAttr('ul', {id: 'project-options'});
   popupWrapper.appendChild(projOptions);
 
-  const liEdit = document.createElement('li');
-  const btnEdit = createElemAttr('button', {type: 'button', class: 'btn-proj-option'});
-  btnEdit.append(createElemAttr('i', {class: 'fas fa-edit'}), 'Edit project');
-  liEdit.appendChild(btnEdit);
+  if (project.id !== 'inbox') {
+    const liEdit = document.createElement('li');
+    projOptions.appendChild(liEdit);
+
+    const btnEdit = createElemAttr('button', {type: 'button', class: 'btn-proj-option'});
+    btnEdit.append(createElemAttr('i', {class: 'fas fa-edit'}), 'Edit project');
+    liEdit.appendChild(btnEdit);
+
+    btnEdit.addEventListener('click', () => handleProjectEdit(project));
+  }
 
   const liDelComplete = document.createElement('li');
+  projOptions.appendChild(liDelComplete);
+
   const btnDelComplete = createElemAttr('button', {type: 'button', class: 'btn-proj-option'});
   btnDelComplete.append(createElemAttr('i', {class: 'fas fa-calendar-check'}), 'Delete completed tasks');
   liDelComplete.appendChild(btnDelComplete);
 
-  const liDelete = document.createElement('li');
-  const btnDelete = createElemAttr('button', {type: 'button', class: 'btn-proj-option'});
-  btnDelete.append(createElemAttr('i', {class: 'far fa-trash-alt'}), 'Delete project');
-  liDelete.appendChild(btnDelete);
+  if (project.id !== 'inbox') {
+    const liDelete = document.createElement('li');
+    projOptions.appendChild(liDelete);
 
-  projOptions.append(liEdit, liDelComplete, liDelete);
+    const btnDelete = createElemAttr('button', {type: 'button', class: 'btn-proj-option'});
+    btnDelete.append(createElemAttr('i', {class: 'far fa-trash-alt'}), 'Delete project');
+    liDelete.appendChild(btnDelete);
+
+    btnDelete.addEventListener('click', () => handleDelProject(project));
+  }
 
   document.body.appendChild(popupWrapper);
 
@@ -105,11 +121,7 @@ function showOptionsPopup(btnOptions, project) {
 
   popupWrapper.addEventListener('click', () => popupWrapper.remove());
 
-  btnEdit.addEventListener('click', () => handleProjectEdit(project));
-
   btnDelComplete.addEventListener('click', () => handleDelComplete(project));
-
-  btnDelete.addEventListener('click', () => handleDelProject(project));
 }
 
 function handleDelProject(project) {
@@ -130,6 +142,8 @@ function handleDelProject(project) {
       });
 
       loadContent(createTodayPage());
+      
+      highlightActiveTab(document.querySelector('#today .btn-menu'));
     }
     else if (e.target.dataset.click) conf.remove();
   })

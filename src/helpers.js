@@ -1,4 +1,4 @@
-import { parse, format, isToday, isTomorrow, isThisYear, isPast } from 'date-fns';
+import { parse, format, isToday, isTomorrow, isThisYear, isPast, isFuture, isAfter } from 'date-fns';
 
 // Unique ID generator (based on https://gist.github.com/gordonbrander/2230317#file-id-js)
 function uniqueId() {
@@ -28,6 +28,17 @@ function isDueDateToday(dueDate) {
   return isToday(parsedDate);
 }
 
+function isDueDateUpcoming(dueDate) {
+  const parsedDate = parse(dueDate, "MMM d yyyy", new Date());
+  return isFuture(parsedDate);
+}
+
+function compareDates(firstDate, secondDate) {
+  const firstDateParsed = parse(firstDate, "MMM d yyyy", new Date());
+  const secondDateParsed = parse(secondDate, "MMM d yyyy", new Date());
+  return isAfter(firstDateParsed, secondDateParsed) ? 1 : (-1);
+}
+
 function focusAtEnd(element) {
   element.focus();
   const value = element.value;
@@ -49,4 +60,23 @@ function getToday() {
   return format(Date.now(), 'EEE, MMM d');
 }
 
-export { uniqueId, createElemAttr, formatDate, isDueDateToday, focusAtEnd, setProgressDisplay, getToday };
+function formatDateUpcoming(dateStr) {
+  const parsedDate = parse(dateStr, "MMM d yyyy", new Date());
+  const date = isTomorrow(parsedDate) ? format(parsedDate, "MMM d, 'Tomorrow'")
+      : isThisYear(parsedDate) ? format(parsedDate, 'MMM d, eeee')
+      : format(parsedDate, "MMM d yyyy, eeee");
+  return date;
+}
+
+export {
+  uniqueId,
+  createElemAttr,
+  formatDate,
+  isDueDateToday,
+  isDueDateUpcoming,
+  focusAtEnd,
+  setProgressDisplay,
+  getToday,
+  compareDates,
+  formatDateUpcoming,
+};

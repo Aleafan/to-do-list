@@ -3,8 +3,7 @@ import { createProjectPage } from './project.js';
 import { loadContent } from './domChange.js';
 import { createElemAttr } from './helpers.js';
 import { createTodayPage } from './today.js';
-
-const timeline = ['This week', 'All tasks'];
+import { createUpcomingPage } from './upcoming.js';
 
 function createNavMenu() {
   const navWrapper = createElemAttr('div', {id: 'nav-wrapper'});
@@ -12,14 +11,32 @@ function createNavMenu() {
   const navMenu = createElemAttr('section', {id: 'nav-menu'});
   navWrapper.appendChild(navMenu);
 
-  const navTimeline = createElemAttr('ul', {id: 'nav-timeline'});
-  navMenu.appendChild(navTimeline);
+  const navStandard = createElemAttr('ul', {id: 'nav-standard-items'});
+  navMenu.appendChild(navStandard);
 
-  const li = createElemAttr('li', { id: 'today' });
-  navTimeline.appendChild(li);
+  // Create "Inbox" menu button
+  const inboxProject = projects.list.find(project => project.id === 'inbox');
 
-  const btnToday = createElemAttr('button', {class: 'btn-menu btn-flex', type: 'button'});
-  li.appendChild(btnToday);
+  const liInbox = createElemAttr('li', { id: 'inbox' });
+  navStandard.appendChild(liInbox);
+
+  const btnInbox = createElemAttr('button', {class: 'btn-menu btn-flex', type: 'button'});
+  liInbox.appendChild(btnInbox);
+
+  const spanTitle = createElemAttr('span', {class: 'span-title'});
+  spanTitle.textContent = 'Inbox';
+
+  const spanNumber = createElemAttr('span', {class: 'task-number'});
+  spanNumber.textContent = inboxProject.calcActiveTasks();
+
+  btnInbox.append(createElemAttr('i', { class: 'fas fa-inbox' }), spanTitle, spanNumber);
+  
+  // Create "Today" menu button
+  const liToday = createElemAttr('li', { id: 'today' });
+  navStandard.appendChild(liToday);
+
+  const btnToday = createElemAttr('button', {class: 'btn-menu btn-flex active-tab', type: 'button'});
+  liToday.appendChild(btnToday);
 
   const span1 = document.createElement('span');
   span1.textContent = 'Today';
@@ -27,30 +44,23 @@ function createNavMenu() {
   const span2 = createElemAttr('span', { class: 'task-number' });
   span2.textContent = projects.findTodayTasks().calcActiveTasks();
 
-  btnToday.append(span1, span2);
+  btnToday.append(createElemAttr('i', { class: 'fas fa-calendar-day' }),span1, span2);
 
-  timeline.forEach(time => {
-    const li = document.createElement('li');
-    navTimeline.appendChild(li);
+  // Create "Upcoming" menu button
+  const liUpcoming = createElemAttr('li', { id: 'upcoming' });
+  navStandard.appendChild(liUpcoming);
 
-    const button = createElemAttr('button', {class: 'btn-menu btn-flex', type: 'button'});
-    li.appendChild(button);
+  const btnUpcoming = createElemAttr('button', {class: 'btn-menu btn-flex', type: 'button'});
+  btnUpcoming.append(createElemAttr('i', { class: 'fas fa-calendar-alt' }), 'Upcoming');
+  liUpcoming.appendChild(btnUpcoming);
 
-    const span1 = document.createElement('span');
-    span1.textContent = time;
-
-    const span2 = document.createElement('span');
-    span2.textContent = '5';
-
-    button.append(span1, span2);
-  });
+  // Create "Projects" section
+  const h2 = document.createElement('h2');
+  h2.append( 'Projects');
+  navMenu.appendChild(h2);
 
   const navProjects = createElemAttr('ul', {id: 'nav-projects'});
   navMenu.appendChild(navProjects);
-
-  const h2 = document.createElement('h2');
-  h2.textContent = 'Projects';
-  navProjects.appendChild(h2);
 
   projects.list.forEach(project => createProjectButton(project, navProjects));
 
@@ -86,12 +96,27 @@ function createNavMenu() {
 
   form.addEventListener('submit', handleSubmit);
 
-  btnToday.addEventListener('click', () => loadContent(createTodayPage()));
+  btnToday.addEventListener('click', function() {
+    highlightActiveTab(this);
+    loadContent(createTodayPage());
+  });
+
+  btnUpcoming.addEventListener('click', function() {
+    highlightActiveTab(this);
+    loadContent(createUpcomingPage());
+  });
+
+  btnInbox.addEventListener('click', function() {
+    highlightActiveTab(this);
+    loadContent(createProjectPage(inboxProject));
+  });
 
   return navWrapper;
 }
 
 function createProjectButton(project, domParent) {
+  if (project.id === 'inbox') return;
+
   const li = createElemAttr('li', {id: project.id});
   domParent.appendChild(li);
 
@@ -107,7 +132,17 @@ function createProjectButton(project, domParent) {
   spanNumber.textContent = project.calcActiveTasks();
   button.appendChild(spanNumber);
   
-  button.addEventListener('click', () => loadContent(createProjectPage(project)));
+  button.addEventListener('click', function() {
+    highlightActiveTab(this);
+    loadContent(createProjectPage(project));
+  });
+}
+
+function highlightActiveTab(button) {
+  const currTab = document.querySelector('.active-tab');
+  if (currTab) currTab.classList.remove('active-tab');
+
+  button.classList.add('active-tab');
 }
 
 function handleSubmit(e) {
@@ -118,6 +153,7 @@ function handleSubmit(e) {
   loadContent(createProjectPage(newProject));
   toggleProjectForm();
   createProjectButton(newProject, document.getElementById('nav-projects'));
+  highlightActiveTab(document.querySelector(`#${newProject.id} .btn-menu`));
 }
 
 function toggleNav() {
@@ -141,4 +177,4 @@ function recalcTaskNumber(project) {
   spanNumber.textContent = project.calcActiveTasks();
 }
 
-export { createNavMenu, toggleNav, recalcTaskNumber };
+export { createNavMenu, toggleNav, recalcTaskNumber, highlightActiveTab };

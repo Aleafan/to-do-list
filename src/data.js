@@ -1,4 +1,87 @@
-import { uniqueId, isDueDateToday } from './helpers';
+import { uniqueId, isDueDateToday, isDueDateUpcoming, compareDates } from './helpers';
+
+const inbox = {
+  id: 'inbox',
+  title: 'Inbox',
+  description: '',
+  tasks: [
+    {
+      title: 'Finish IT project',
+      notes: '',
+      dueDate: 'Aug 23 2021',
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
+    },
+    {
+      title: 'Read weekly news',
+      notes: '',
+      dueDate: 'Sep 26 2021',
+      priority: false,
+      complete: false,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
+    },
+    {
+      title: 'Repair the bicycle',
+      notes: 'Buy a spanner size 12',
+      dueDate: 'Sep 12 2021',
+      priority: false,
+      complete: true,
+      togglePriority() {
+        this.priority = !this.priority;
+      },
+      toggleComplete() {
+        this.complete = !this.complete;
+      },
+      changeDate(date) {
+        this.dueDate = date;
+      },
+    },
+  ],
+
+  addTask(task) {
+    this.tasks.push(task);
+  },
+
+  deleteTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  },
+
+  calcProgress() {
+    const tasksNum = this.tasks.length;
+    if (tasksNum === 0) return 0;
+    let completed = 0;
+    this.tasks.forEach(task => {
+      if (task.complete) completed++;
+    });
+    return Math.round((completed / tasksNum) * 100);
+  },
+
+  calcActiveTasks() {
+    const number = this.tasks.filter(task => !task.complete).length;
+    return number || '';
+  },
+  
+  deleteCompleted() {
+    this.tasks = this.tasks.filter((task) => !task.complete);
+  },
+};
 
 const vacation = {
   id: 'a94hngh656',
@@ -8,7 +91,7 @@ const vacation = {
     {
       title: 'Book flight',
       notes: 'Flight during the day',
-      dueDate: 'Aug 20 2021',
+      dueDate: 'Aug 23 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -24,7 +107,7 @@ const vacation = {
     {
       title: 'Read about the metro',
       notes: 'Tickets, prices, opening times',
-      dueDate: 'Jul 26 2021',
+      dueDate: 'Sep 26 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -90,22 +173,24 @@ const vacation = {
   },
 
   calcActiveTasks() {
-    return this.tasks.filter(task => !task.complete).length;
+    const number = this.tasks.filter(task => !task.complete).length;
+    return number || '';
   },
   
   deleteCompleted() {
     this.tasks = this.tasks.filter((task) => !task.complete);
   },
 };
+
 const exercise = {
   id: 'acurlpj9pg',
   title: 'Exercise',
-  description: 'Phisical exercise is important for general well-being',
+  description: 'Physical exercise is important for general well-being',
   tasks: [
     {
       title: 'Practice yoga',
       notes: 'Practice yoga 3 times per week',
-      dueDate: '',
+      dueDate: 'Aug 24 2021',
       priority: true,
       complete: false,
       togglePriority() {
@@ -121,7 +206,7 @@ const exercise = {
     {
       title: 'Exercise on the bar',
       notes: '',
-      dueDate: 'Aug 20 2021',
+      dueDate: 'Aug 23 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -137,7 +222,7 @@ const exercise = {
     {
       title: 'Do back exercises',
       notes: '',
-      dueDate: '',
+      dueDate: 'Aug 10 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -151,12 +236,15 @@ const exercise = {
       },
     },
   ],
+
   addTask(task) {
     this.tasks.push(task);
   },
+
   deleteTask(task) {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
+
   calcProgress() {
     const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
@@ -166,13 +254,17 @@ const exercise = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
+
   calcActiveTasks() {
-    return this.tasks.filter(task => !task.complete).length;
+    const number = this.tasks.filter(task => !task.complete).length;
+    return number || '';
   },
+
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
   },
 };
+
 const health = {
   id: 'ayl9h1qd67',
   title: 'Health',
@@ -181,7 +273,7 @@ const health = {
     {
       title: 'Have healthy diet',
       notes: '',
-      dueDate: 'Aug 20 2021',
+      dueDate: 'Aug 23 2021',
       priority: false,
       complete: true,
       togglePriority() {
@@ -197,7 +289,7 @@ const health = {
     {
       title: 'Reduce sugar consumption',
       notes: '',
-      dueDate: 'Aug 20 2021',
+      dueDate: 'Aug 23 2021',
       priority: false,
       complete: false,
       togglePriority() {
@@ -227,12 +319,15 @@ const health = {
       },
     },
   ],
+
   addTask(task) {
     this.tasks.push(task);
   },
+
   deleteTask(task) {
     this.tasks.splice(this.tasks.indexOf(task), 1);
   },
+
   calcProgress() {
     const tasksNum = this.tasks.length;
     if (tasksNum === 0) return 0;
@@ -242,13 +337,17 @@ const health = {
     });
     return Math.round((completed / tasksNum) * 100);
   },
+
   calcActiveTasks() {
-    return this.tasks.filter(task => !task.complete).length;
+    const number = this.tasks.filter(task => !task.complete).length;
+    return number || '';
   },
+
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
   },
 };
+
 const house = {
   id: 'a9yorb54d2',
   title: 'House',
@@ -303,7 +402,8 @@ const house = {
     return Math.round((completed / tasksNum) * 100);
   },
   calcActiveTasks() {
-    return this.tasks.filter(task => !task.complete).length;
+    const number = this.tasks.filter(task => !task.complete).length;
+    return number || '';
   },
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
@@ -314,7 +414,7 @@ function createProject(title) {
   const id = uniqueId();
   const addTask = (task) => project.tasks.push(task);
   const deleteTask = (task) => project.tasks.splice(project.tasks.indexOf(task), 1);
-  const calcActiveTasks = () => project.tasks.filter(task => !task.complete).length;
+  const calcActiveTasks = () => project.tasks.filter(task => !task.complete).length || '';
   const calcProgress = () => {
     const tasksNum = project.tasks.length;
     if (tasksNum === 0) return 0;
@@ -358,7 +458,7 @@ function createTask(title, notes, dueDate, priority, complete) {
 }
 
 const projects = {
-  list: [vacation, exercise, health, house],
+  list: [inbox, vacation, exercise, health, house],
 
   addProject(project) {
     this.list.push(project);
@@ -396,10 +496,38 @@ const projects = {
       },
 
       calcActiveTasks() {
-        return this.tasks.filter(taskObj => !taskObj.task.complete).length;
+        const number = this.tasks.filter(taskObj => !taskObj.task.complete).length;
+        return number || '';
       },
     };
     return todayProject;
+  },
+
+  findUpcomingTasks() {
+    const upcomingTasks = this.list
+      .reduce((array, project) => {
+        project.tasks.forEach(task => {
+          if (task.dueDate && isDueDateUpcoming(task.dueDate)) {
+            const taskObj = {
+              id: project.id,
+              task,
+            };
+            const dateElem = array.find(elem => elem.date === task.dueDate);
+            if (dateElem) {
+              dateElem.tasks.push(taskObj);
+            } else {
+              const newDateElem = {
+                date: task.dueDate,
+                tasks: [taskObj],
+              };
+              array.push(newDateElem);
+            }
+          }
+        });
+        return array;
+      }, [])
+      .sort((first, second) => compareDates(first.date, second.date));
+    return upcomingTasks; // [{ date: 'Aug 23 2021', tasks: [task1, task2...]}, ...]
   },
 };
 

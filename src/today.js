@@ -12,7 +12,7 @@ function createTodayPage() {
   const header = createElemAttr('header', { id: 'header-today' });
 
   const h3 = document.createElement('h3');
-  h3.textContent = 'Today';
+  h3.append(createElemAttr('i', { class: 'fas fa-calendar-day' }), 'Today');
   const p = document.createElement('p');
   p.textContent = getToday();
 

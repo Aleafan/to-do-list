@@ -6,17 +6,14 @@
 
     <title>To Do List</title>
 
-    <link
-      href="../node_modules/flatpickr/dist/themes/dark.css"
-      rel="stylesheet"
-    />
+    <link href="../node_modules/flatpickr/dist/themes/dark.css" rel="stylesheet"/>
     <link href="../src/styles/normalize.css" rel="stylesheet" />
     <link href="../src/styles/style.css" rel="stylesheet" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -38,7 +35,7 @@
       </header>
       <div id="nav-wrapper">
         <section id="nav-menu">
-          <ul id="nav-timeline">
+          <ul id="nav-standard-items">
             <li>
               <button class="btn-menu btn-flex" type="button">
                 <span>Today</span>
@@ -167,6 +164,60 @@
             Book hotel room
           </li>
         </ul>
+      </main>
+    </template>
+
+    <template class="upcoming-page">
+      <main>
+        <header id='header-upcoming'>
+          <h3>Upcoming</h3>
+        </header>
+
+        <article class='day-tasks'>
+          <h4>Aug 21, Tomorrow</h4>
+          <ul class="task-list">          
+            <li class="">
+              <div class="task-main">
+                <button class="btn-check" type="button" aria-label="complete-task">
+                  <i class="fas fa-check"></i>
+                </button>
+                Book flight
+              </div>
+            </li>
+            <li>
+              <button class="btn-check" type="button" aria-label="complete-task">
+                <i class="fas fa-check"></i>
+              </button>
+              Read about the metro
+              <span class="due-date">Sep 28</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class='day-tasks'>
+          <h4>Aug 22, Sunday</h4>
+          <ul class="task-list">
+            <li class="checked">
+              <button class="btn-check" type="button" aria-label="complete-task">
+                <i class="fas fa-check"></i>
+              </button>
+              Buy travel guide
+              <span class="due-date">Sep 10</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class='day-tasks'>
+          <h4>Aug 23, Monday</h4>
+          <ul class="task-list">
+            <li>
+              <button class="btn-check" type="button" aria-label="complete-task">
+                <i class="fas fa-check"></i>
+              </button>
+              Book hotel room
+            </li>
+          </ul>
+        </article>
       </main>
     </template>
 

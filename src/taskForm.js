@@ -2,8 +2,10 @@ import { projects, createTask } from "./data.js";
 import { recalcTaskNumber } from "./navMenu.js";
 import { setProgressDisplay } from "./project.js";
 import { createTaskLi, handleDeleteTask } from "./taskListItem.js";
-import { createElemAttr, formatDate, focusAtEnd, isDueDateToday } from "./helpers.js";
+import { createElemAttr, formatDate, focusAtEnd, isDueDateToday, isDueDateUpcoming } from "./helpers.js";
 import flatpickr from "flatpickr";
+import { loadContent } from "./domChange.js";
+import { createUpcomingPage } from "./upcoming.js";
 
 function createTaskForm(viewType, project, task) {
   const taskFormId = task ? "edit-task-form" : "new-task-form";
@@ -122,9 +124,7 @@ function createTaskForm(viewType, project, task) {
   initFlatpickr(datePicker, inputDateId, initialDate);
 
   // - Create project selection menu
-  const taskProjectWrapper = createElemAttr("div", {
-    class: "task-project-wrapper",
-  });
+  const taskProjectWrapper = createElemAttr("div", { class: "task-project-wrapper" });
   formOptions.appendChild(taskProjectWrapper);
 
   const selectProjectId = task ? "edit-task-project" : "new-task-project";
@@ -166,8 +166,8 @@ function createTaskForm(viewType, project, task) {
 
   taskForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (task) editTask(taskForm, task, project, viewType);
-    else createNewTask(taskForm, project);
+    if (task) handleEditTask(taskForm, task, project, viewType);
+    else handleCreateTask(viewType, taskForm, project);
   });
 
   return taskForm;
@@ -179,7 +179,12 @@ function initFlatpickr(element, id, initialDate) {
     altInput: true,
     altFormat: "M j Y",
     dateFormat: "M j Y",
+    minDate: 'today',
+    allowInvalidPreload: true,
     defaultDate: initialDate,
+    locale: {
+      firstDayOfWeek: 1,
+    },
     wrap: true,
     onReady: (a, b, fp) => {
       fp.altInput.setAttribute("id", id);
@@ -230,53 +235,59 @@ function resetForm(form) {
   form.reset();
 }
 
-function createNewTask(form, project) {
+function createNewTask(form) {
   const title = form.querySelector(".task-title").value;
   const notes = form.querySelector(".task-notes").value;
   const dueDate = form.querySelector(".flatpickr-input").value;
-  const btnPriority = form.querySelector(".task-option");
-  const priority = btnPriority.value;
-  const btnCheck = form.querySelector(".btn-check");
-  const complete = btnCheck.value;
+  const priority = form.querySelector(".task-option").value;
+  const complete = form.querySelector(".btn-check").value;
+
+  return createTask(title, notes, dueDate, priority, complete);
+}
+
+function handleCreateTask(viewType, form, project) {
+  const task = createNewTask(form);
 
   const newProjectId = form.querySelector(".task-project").value;
-  const newProject = projects.list.find(
-    (currProject) => currProject.id === newProjectId
-  );
-
-  const task = createTask(title, notes, dueDate, priority, complete);
+  const newProject = projects.list.find((currProject) => currProject.id === newProjectId);
 
   newProject.addTask(task);
   recalcTaskNumber(newProject);
 
   const taskList = document.querySelector(".task-list");
-  // Today view case
-  if (!project && isDueDateToday(dueDate)) {
+
+  if (viewType === 'today' && isDueDateToday(task.dueDate)) {
     taskList.appendChild(createTaskLi(task, newProject, 'today'));
     setProgressDisplay(projects.findTodayTasks());
-  // Project view case
-  } else if (project && newProjectId === project.id) {
+  }
+  else if (viewType === 'project' && newProjectId === project.id) {
     taskList.appendChild(createTaskLi(task, project, 'project'));
     setProgressDisplay(project);
   }
-  if (isDueDateToday(dueDate)) recalcTaskNumber(projects.findTodayTasks());
-  toggleTaskForm();
-  resetForm(form);
+  else if (viewType === 'upcoming' && isDueDateUpcoming(task.dueDate)) {
+    loadContent(createUpcomingPage());
+  }
+  if (isDueDateToday(task.dueDate)) {
+    recalcTaskNumber(projects.findTodayTasks());
+  }
+  if (viewType !== 'upcoming') {
+    toggleTaskForm();
+    resetForm(form);
+  }
 }
 
-function editTask(form, task, project, viewType) {
+function handleEditTask(form, task, project, viewType) {
   const prevDate = task.dueDate;
 
-  task.title = form.querySelector(".task-title").value;
-  task.notes = form.querySelector(".task-notes").value;
-  task.dueDate = form.querySelector(".flatpickr-input").value;
-  task.priority = form.querySelector(".task-option").value ? true : false;
-  task.complete = form.querySelector(".btn-check").value ? true : false;
+  const { title, notes, dueDate, priority, complete } = createNewTask(form);
+  task.title = title;
+  task.notes = notes;
+  task.dueDate = dueDate;
+  task.priority = priority;
+  task.complete = complete;
 
   const newProjectId = form.querySelector(".task-project").value;
-  const newProject = projects.list.find(
-    (currProject) => currProject.id === newProjectId
-  );
+  const newProject = projects.list.find((currProject) => currProject.id === newProjectId);
 
   if (viewType === "project") {
     if (newProjectId === project.id) {
@@ -290,7 +301,8 @@ function editTask(form, task, project, viewType) {
     if (isDueDateToday(prevDate) || isDueDateToday(task.dueDate)) {
       recalcTaskNumber(projects.findTodayTasks());
     }
-  } else if (viewType === "today") {
+  } 
+  else if (viewType === "today") {
     if (newProjectId !== project.id) {
       handleDeleteTask(task, project);
       newProject.addTask(task);
@@ -303,6 +315,19 @@ function editTask(form, task, project, viewType) {
     }
     recalcTaskNumber(newProject);
     recalcTaskNumber(projects.findTodayTasks());
+  } 
+  else if (viewType === 'upcoming') {
+    if (newProjectId !== project.id) {
+      handleDeleteTask(task, project);
+      newProject.addTask(task);
+    }
+    recalcTaskNumber(newProject);
+    if (prevDate !== task.dueDate) {
+      if (isDueDateToday(task.dueDate)) recalcTaskNumber(projects.findTodayTasks());
+      loadContent(createUpcomingPage());
+    } else {
+      form.parentNode.replaceWith(createTaskLi(task, newProject, 'upcoming'));
+    }    
   }
   document.querySelector(".form-overlay").classList.remove("show");
 }

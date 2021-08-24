@@ -6,4 +6,4 @@ import { createTodayPage } from './today';
 loadInterface(createHeader());
 loadInterface(createNavMenu());
 
-loadContent(createTodayPage());
+loadContent(createTodayPage);

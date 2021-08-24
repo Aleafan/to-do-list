@@ -25,7 +25,11 @@ function createTaskLi(task, project, viewType) {
   taskTitle.textContent = task.title;
   taskMain.appendChild(taskTitle);
 
-  if (viewType !== 'project') {
+  if (viewType === 'project') {
+    const dateSpan = createElemAttr('span', {class: 'due-date'});
+    taskMain.appendChild(dateSpan);
+    displayDate(task, dateSpan);
+  } else {
     const projectName = createElemAttr('p', {class: 'project-name'});
     projectName.append(createElemAttr('i', {class: 'fas fa-square'}), project.title);
     li.appendChild(projectName);
@@ -55,12 +59,6 @@ function createTaskLi(task, project, viewType) {
 
   const dateInput = createElemAttr('input', {type: 'text', class: 'visuallyhidden', placeholder: 'When', 'data-input': ''});
   label.appendChild(dateInput);
-
-  if (viewType === 'project') {
-    const dateSpan = createElemAttr('span', {class: 'due-date'});
-    taskMain.appendChild(dateSpan);
-    displayDate(task, dateSpan);
-  }
 
   initFlatpickr(datePicker, task, li, viewType);
 
@@ -126,6 +124,7 @@ function initFlatpickr(element, task, li, viewType) {
     locale: {
       firstDayOfWeek: 1,
     },
+    appendTo: document.body.querySelector('.fp-container'),
     wrap: true,
     onChange: (selDates, dateStr) => {
       const prevDate = task.dueDate;
@@ -137,15 +136,18 @@ function initFlatpickr(element, task, li, viewType) {
           recalcTaskNumber(projects.findTodayTasks());
         }
       } else if (viewType === 'today') {
-        li.remove();
-        const todayProject = projects.findTodayTasks();
-        setProgressDisplay(todayProject);
-        recalcTaskNumber(todayProject);
+        if (!isDueDateToday(dateStr)) {
+          li.querySelector('.flatpickr')._flatpickr.destroy();
+          li.remove();
+          const todayProject = projects.findTodayTasks();
+          setProgressDisplay(todayProject);
+          recalcTaskNumber(todayProject);
+        }
       } else if (viewType === 'upcoming') {
         if (isDueDateToday(dateStr)) {
           recalcTaskNumber(projects.findTodayTasks());
         }
-        loadContent(createUpcomingPage());
+        loadContent(createUpcomingPage);
       }
     },
   });
@@ -209,6 +211,8 @@ function handleEdit(task, project, li, viewType) {
     openedForm.querySelector('.btn-cancel').click();
   }
 
+  li.querySelector('.flatpickr')._flatpickr.destroy();
+
   while (li.firstChild) {
     li.removeChild(li.firstChild);
   }
@@ -246,8 +250,9 @@ function handleDeleteTask(task, project, li, viewType) {
     recalcTaskNumber(todayProject);
   }  
   else if (viewType === 'upcoming') {
-    return loadContent(createUpcomingPage());
+    return loadContent(createUpcomingPage);
   }
+  li.querySelector('.flatpickr')._flatpickr.destroy();
   if (li) li.remove();
 }
 

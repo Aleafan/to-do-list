@@ -141,8 +141,8 @@ function handleDelProject(project) {
         if (li.id === project.id) li.remove();
       });
 
-      loadContent(createTodayPage());
-      
+      loadContent(createTodayPage);
+
       highlightActiveTab(document.querySelector('#today .btn-menu'));
     }
     else if (e.target.dataset.click) conf.remove();
@@ -159,7 +159,7 @@ function handleDelComplete(project) {
     e.stopPropagation();
     if (e.target.dataset.click == 'delete') {
       project.deleteCompleted();
-      loadContent(createProjectPage(project));
+      loadContent(createProjectPage.bind(null, project));
       recalcTaskNumber(project);
     }
     else if (e.target.dataset.click) conf.remove();

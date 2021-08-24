@@ -98,17 +98,17 @@ function createNavMenu() {
 
   btnToday.addEventListener('click', function() {
     highlightActiveTab(this);
-    loadContent(createTodayPage());
+    loadContent(createTodayPage);
   });
 
   btnUpcoming.addEventListener('click', function() {
     highlightActiveTab(this);
-    loadContent(createUpcomingPage());
+    loadContent(createUpcomingPage);
   });
 
   btnInbox.addEventListener('click', function() {
     highlightActiveTab(this);
-    loadContent(createProjectPage(inboxProject));
+    loadContent(createProjectPage.bind(null, inboxProject));
   });
 
   return navWrapper;
@@ -134,7 +134,7 @@ function createProjectButton(project, domParent) {
   
   button.addEventListener('click', function() {
     highlightActiveTab(this);
-    loadContent(createProjectPage(project));
+    loadContent(createProjectPage.bind(null, project));
   });
 }
 
@@ -150,7 +150,7 @@ function handleSubmit(e) {
   const title = this.querySelector('.project-title').value;
   const newProject = createProject(title);
   projects.addProject(newProject);
-  loadContent(createProjectPage(newProject));
+  loadContent(createProjectPage.bind(null, newProject));
   toggleProjectForm();
   createProjectButton(newProject, document.getElementById('nav-projects'));
   highlightActiveTab(document.querySelector(`#${newProject.id} .btn-menu`));

@@ -185,6 +185,7 @@ function initFlatpickr(element, id, initialDate) {
     locale: {
       firstDayOfWeek: 1,
     },
+    appendTo: document.querySelector('.fp-container'),
     wrap: true,
     onReady: (a, b, fp) => {
       fp.altInput.setAttribute("id", id);
@@ -219,6 +220,7 @@ function toggleTaskState() {
 
 function handleCancel(form, project, task) {
   if (task) {
+    form.querySelector('.flatpickr')._flatpickr.destroy();
     form.parentNode.replaceWith(createTaskLi(task, project));
     document.querySelector(".form-overlay").classList.remove("show");
   } else {
@@ -265,7 +267,7 @@ function handleCreateTask(viewType, form, project) {
     setProgressDisplay(project);
   }
   else if (viewType === 'upcoming' && isDueDateUpcoming(task.dueDate)) {
-    loadContent(createUpcomingPage());
+    loadContent(createUpcomingPage);
   }
   if (isDueDateToday(task.dueDate)) {
     recalcTaskNumber(projects.findTodayTasks());
@@ -288,6 +290,8 @@ function handleEditTask(form, task, project, viewType) {
 
   const newProjectId = form.querySelector(".task-project").value;
   const newProject = projects.list.find((currProject) => currProject.id === newProjectId);
+
+  form.querySelector('.flatpickr')._flatpickr.destroy();
 
   if (viewType === "project") {
     if (newProjectId === project.id) {
@@ -324,7 +328,7 @@ function handleEditTask(form, task, project, viewType) {
     recalcTaskNumber(newProject);
     if (prevDate !== task.dueDate) {
       if (isDueDateToday(task.dueDate)) recalcTaskNumber(projects.findTodayTasks());
-      loadContent(createUpcomingPage());
+      loadContent(createUpcomingPage);
     } else {
       form.parentNode.replaceWith(createTaskLi(task, newProject, 'upcoming'));
     }    

@@ -1,8 +1,3 @@
-/* Variables declarations */
-:root {
-  --header-height: 55px;
-}
-
 /* Global rules */
 *,
 *::before,
@@ -19,7 +14,7 @@ body {
   position: relative;
   font-family: "Roboto Slab", serif;
   scroll-behavior: smooth;
-  padding-top: var(--header-height, 55px);
+  padding-top: 3.5rem;
 }
 
 h1, h3, h4 {
@@ -52,7 +47,7 @@ button {
   display: flex;
   align-items: center;
   width: 100%;
-  height: var(--header-height, 55px);
+  height: 3.5rem;
   color: white;
   background-color: darkblue;
   padding: 0 1rem;
@@ -75,7 +70,7 @@ h1 {
   width: 100vw;
   height: 100%;
   z-index: 4;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.6);
   transition: all 0.3s ease-out;
 }
 @media (min-width: 750px) {
@@ -108,6 +103,11 @@ body.nav-positioner #nav-wrapper {
   background-color: whitesmoke;
   overflow: auto;
 }
+@media (min-width: 750px) {
+  #nav-menu {
+    padding-top: 4rem;
+  }
+}
 @media (min-width: 1050px) {
   #nav-menu {
     width: 350px;
@@ -115,7 +115,7 @@ body.nav-positioner #nav-wrapper {
 }
 
 .active-tab {
-  background-color: #e0dbdb;
+  background-color: #dbdbdb;
 }
 
 #nav-standard-items i {
@@ -177,13 +177,17 @@ header .fa-calendar-alt {
   margin: 0;
 }
 
-.btn-menu span:last-child {
-  margin-left: auto;
+.span-title {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-right: 0.5rem;
 }
 
 .task-number {
   color: gray;
   font-size: 1rem;
+  margin-left: auto;
 }
 
 .project-icon {

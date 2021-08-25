@@ -111,6 +111,8 @@ function createNavMenu() {
     loadContent(createProjectPage.bind(null, inboxProject));
   });
 
+  navWrapper.addEventListener('click', handleClickNavWrapper);
+
   return navWrapper;
 }
 
@@ -175,6 +177,10 @@ function recalcTaskNumber(project) {
   const navMenu = document.getElementById('nav-menu');
   const spanNumber = navMenu.querySelector(`#${project.id} .task-number`);
   spanNumber.textContent = project.calcActiveTasks();
+}
+
+function handleClickNavWrapper(e) {
+  if (e.target === this) toggleNav();
 }
 
 export { createNavMenu, toggleNav, recalcTaskNumber, highlightActiveTab };

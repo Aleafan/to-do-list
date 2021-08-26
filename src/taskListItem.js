@@ -128,7 +128,7 @@ function initFlatpickr(element, task, li, viewType) {
     wrap: true,
     onChange: (selDates, dateStr) => {
       const prevDate = task.dueDate;
-      task.changeDate(dateStr);
+      task.dueDate = dateStr;
       if (viewType === 'project') {
         const dateElement = li.querySelector('.due-date');
         displayDate(task, dateElement);
@@ -167,7 +167,7 @@ function displayDate(task, element) {
 }
 
 function handleCheck(li, task, project, viewType) {
-  task.toggleComplete();
+  task.complete = !task.complete;
   if (task.complete) {
     li.classList.add('checked');    
     li.querySelector('.fa-check').style['animation-name'] = 'check';
@@ -189,7 +189,7 @@ function handleCheck(li, task, project, viewType) {
 
 function handlePriority(e, task, button, li) {
   e.stopPropagation();
-  task.togglePriority();
+  task.priority = !task.priority;
   if (task.priority) {
     li.classList.add('priority');
     button.classList.add('active');

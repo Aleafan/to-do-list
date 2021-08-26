@@ -141,8 +141,8 @@ function handleDelProject(project) {
         if (li.id === project.id) li.remove();
       });
 
+      recalcTaskNumber(projects.findTodayTasks());
       loadContent(createTodayPage);
-
       highlightActiveTab(document.querySelector('#today .btn-menu'));
     }
     else if (e.target.dataset.click) conf.remove();

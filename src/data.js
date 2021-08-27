@@ -1,6 +1,10 @@
 import { uniqueId, isDueDateToday, isDueDateUpcoming, compareDates } from './helpers';
+import { add, format, sub } from 'date-fns';
 
-// Default projects declaration
+// Default projects declarations
+const now = Date.now();
+const today = format(now, "MMM d yyyy");
+
 const inbox = {
   id: 'inbox',
   title: 'Inbox',
@@ -9,21 +13,21 @@ const inbox = {
     {
       title: 'Finish work project',
       notes: '',
-      dueDate: 'Aug 25 2021',
+      dueDate: today,
       priority: false,
       complete: false,
     },
     {
       title: 'Read weekly news',
       notes: '',
-      dueDate: 'Sep 26 2021',
+      dueDate: format(add(now, { months: 1 }), "MMM d yyyy"),
       priority: false,
       complete: true,
     },
     {
       title: 'Repair the bicycle',
       notes: 'Buy a spanner size 12',
-      dueDate: 'Sep 12 2021',
+      dueDate: format(add(now, { days: 15 }), "MMM d yyyy"),
       priority: false,
       complete: false,
     },
@@ -38,21 +42,21 @@ const vacation = {
     {
       title: 'Book flight tickets',
       notes: 'Flight during the day',
-      dueDate: 'Aug 25 2021',
+      dueDate: today,
       priority: false,
       complete: false,
     },
     {
       title: 'Read about the metro',
       notes: 'Tickets, prices, opening times',
-      dueDate: 'Sep 26 2021',
+      dueDate: format(add(now, { days: 8 }), "MMM d yyyy"),
       priority: false,
       complete: false,
     },
     {
       title: 'Buy travel guide',
       notes: 'Rough Guide is preferred',
-      dueDate: 'Sep 12 2021',
+      dueDate: format(sub(now, { days: 3 }), "MMM d yyyy"),
       priority: false,
       complete: true,
     },
@@ -74,21 +78,21 @@ const exercise = {
     {
       title: 'Practice yoga',
       notes: 'Practice yoga 3 times per week',
-      dueDate: 'Aug 26 2021',
+      dueDate: format(add(now, { days: 1 }), "MMM d yyyy"),
       priority: true,
       complete: false,
     },
     {
       title: 'Exercise on the bar',
       notes: '',
-      dueDate: 'Aug 25 2021',
+      dueDate: today,
       priority: false,
       complete: true,
     },
     {
       title: 'Do back exercises',
       notes: '',
-      dueDate: 'Aug 10 2021',
+      dueDate: format(add(now, { days: 3 }), "MMM d yyyy"),
       priority: false,
       complete: false,
     },
@@ -103,7 +107,7 @@ const house = {
     {
       title: 'Clean the house',
       notes: 'Once per week',
-      dueDate: '',
+      dueDate: format(sub(now, { days: 3 }), "MMM d yyyy"),
       priority: false,
       complete: false,
     },
@@ -125,14 +129,14 @@ const grocery = {
     {
       title: 'Buy milk',
       notes: 'Sale in Diksy - 95% off!',
-      dueDate: 'Aug 25 2021',
+      dueDate: today,
       priority: false,
       complete: false,
     },
     {
       title: 'Buy sugar',
       notes: 'Super cheap in Pyaterochka',
-      dueDate: 'Aug 25 2021',
+      dueDate: today,
       priority: false,
       complete: false,
     },

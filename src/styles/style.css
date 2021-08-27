@@ -1,4 +1,5 @@
 /* Global rules */
+
 *,
 *::before,
 *::after {
@@ -17,6 +18,18 @@ body {
   padding-top: 3.5rem;
 }
 
+main {
+  width: 100%;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 1rem 0.7rem;
+}
+@media (min-width: 750px) {
+  main {
+    padding: 2rem 2rem;
+  }
+}
+
 h1, h3, h4 {
   margin: 0;
 }
@@ -27,7 +40,9 @@ button {
   cursor: pointer;
 }
 
-/* Main menu */
+
+/* Navigation menu */
+
 @media (min-width: 750px) {
   body {
     padding-left: 300px;
@@ -59,12 +74,13 @@ button {
   }
 }
 
-#app-header h1 i {
-  margin-right: 0.2rem;
-}
-
 h1 {
   font-size: 1.8rem;
+  cursor: default;
+}
+
+h1 i {
+  margin-right: 0.2rem;
 }
 
 #nav-wrapper {
@@ -133,9 +149,11 @@ header h3 i {
 .fa-inbox {
   color: darkblue;
 }
+
 .fa-calendar-day {
   color: darkred;
 }
+
 #nav-standard-items .fa-calendar-alt,
 header .fa-calendar-alt {
   color: #6e029d;
@@ -157,11 +175,6 @@ header .fa-calendar-alt {
   align-items: center;
   padding: 0.8rem 1rem;
 }
-.btn-flex:hover,
-#nav-menu > .btn-add:hover,
-.btn-proj-option:hover {
-  background-color: #eae5e5;
-}
 
 .btn-menu {
   width: 100%;
@@ -169,6 +182,12 @@ header .fa-calendar-alt {
   font-size: 1.1rem;
   cursor: pointer;
   border-radius: 3px;
+}
+
+.btn-flex:hover,
+#nav-menu > .btn-add:hover,
+.btn-proj-option:hover {
+  background-color: #eae5e5;
 }
 
 #nav-menu h2 {
@@ -238,18 +257,8 @@ ul {
   padding: 0;
 }
 
+
 /* Project page */
-main {
-  width: 100%;
-  max-width: 750px;
-  margin: 0 auto;
-  padding: 1rem 0.7rem;
-}
-@media (min-width: 750px) {
-  main {
-    padding: 2rem 2rem;
-  }
-}
 
 main header {
   margin-bottom: 1rem;
@@ -419,6 +428,8 @@ main .btn-add {
 main .show-form .btn-add {
   display: none;
 }
+
+/* Task form */
 
 #task-form-wrapper {
   margin: 0 -0.7rem;
@@ -681,7 +692,9 @@ select.task-project {
   width: 20px;
 }
 
+
 /* Delete confirmation menu */
+
 #conf-wrapper {
   position: fixed;
   top: 0;
@@ -742,7 +755,9 @@ select.task-project {
   font-weight: bold;
 }
 
+
 /* Project edit form */
+
 #edit-project {
   padding: 1rem 1rem 1rem;
   margin: -1rem -1rem 0.7rem;
@@ -759,7 +774,9 @@ select.task-project {
   padding-top: 1rem;
 }
 
-/* Page wrapper when forms are active */
+
+/* Page overlay when forms are active */
+
 .form-overlay {
   position: absolute;
   inset: 0;
@@ -774,7 +791,9 @@ select.task-project {
   display: block;
 }
 
+
 /* Today page */
+
 #header-today {
   display: flex;
   align-items: baseline;
@@ -786,7 +805,6 @@ select.task-project {
 }
 
 .project-name {
-  /* text-align: end; */
   color: gray;
   font-size: 0.8rem;
   margin: 0 0 0 1.6rem;
@@ -798,7 +816,9 @@ select.task-project {
   vertical-align: middle;
 }
 
+
 /* Upcoming page */
+
 #header-upcoming {
   padding-bottom: 1rem;
   border-bottom: 1px solid;

@@ -50,13 +50,17 @@ button {
   height: 3.5rem;
   color: white;
   background-color: darkblue;
-  padding: 0 1rem;
+  padding: 0 1rem 0 0.7rem;
   z-index: 5;
 }
 @media (min-width: 750px) {
   #app-header {
     padding: 0 3rem;
   }
+}
+
+#app-header h1 i {
+  margin-right: 0.2rem;
 }
 
 h1 {
@@ -67,7 +71,7 @@ h1 {
   position: fixed;
   top: 0;
   left: -760px;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   z-index: 4;
   background-color: rgba(0, 0, 0, 0.6);
@@ -140,9 +144,9 @@ header .fa-calendar-alt {
 #nav-toggler {
   margin-left: auto;
   color: white;
-  padding: 1.5px 5px;
+  padding: 2px 6px;
   border-radius: 5px;
-  font-size: 1.7rem;
+  font-size: 1.8rem;
 }
 #nav-toggler:hover {
   background-color: rgba(211, 211, 211, 0.363);
@@ -171,6 +175,7 @@ header .fa-calendar-alt {
   margin: 0.5rem 1rem;
   border-bottom: 1px solid grey;
   font-size: 1.4rem;
+  padding-bottom: 0.3rem;
 }
 
 #nav-projects {
@@ -200,13 +205,13 @@ header .fa-calendar-alt {
   display: flex;
   align-items: center;
   overflow: hidden;
-  transition: all 0.2s linear;
+  transition: all 0.2s ease-in-out;
   font-size: 1.1rem;
   margin: 0 0.5rem 0 1rem;
 }
 
 .show-form #project-form {
-  max-height: 300px;
+  max-height: 100px;
   border-bottom: 1px solid gray;
   padding: 0.5rem 0;
 }
@@ -394,6 +399,7 @@ li.edit-mode,
   border-radius: 5px;
   padding: 0 0.3rem;
   align-self: center;
+  min-width: max-content;
 }
 
 .due-date.today {
@@ -415,7 +421,7 @@ main .show-form .btn-add {
 }
 
 #task-form-wrapper {
-  margin: 0 -1rem;
+  margin: 0 -0.7rem;
   padding: 0 0.5rem;
 }
 
@@ -759,7 +765,7 @@ select.task-project {
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(165, 165, 165, 0.2);
+  background: rgba(150, 150, 150, 0.2);
   z-index: 2;
   display: none;
 }

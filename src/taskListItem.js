@@ -1,78 +1,108 @@
-import flatpickr from "flatpickr";
-import { createElemAttr, formatDate, focusAtEnd, setProgressDisplay, isDueDateToday } from './helpers.js';
-import { createConfirmation } from './project.js';
-import { recalcTaskNumber } from './navMenu.js';
-import { createTaskForm } from './taskForm.js';
-import { projects } from './data.js';
-import { loadContent } from "./domChange.js";
-import { createUpcomingPage } from './upcoming.js';
+import flatpickr from 'flatpickr';
+import { formatDate, isDueDateToday } from './helpers';
+import { createTaskForm } from './taskForm';
+import { projects } from './data';
+import createUpcomingPage from './upcoming';
+import createConfirmation from './confScreen';
+import {
+  loadContent,
+  createElemAttr,
+  focusAtEnd,
+  setProgressDisplay,
+  recalcTaskNumber,
+} from './domFunctions';
 
 function createTaskLi(task, project, viewType) {
-  const li = createElemAttr('li', {role: 'button', 'aria-expanded': 'false', tabindex: '0'});
+  const li = createElemAttr('li', { role: 'button', 'aria-expanded': 'false', tabindex: '0' });
   if (task.complete) li.classList.add('checked');
   if (task.priority) li.classList.add('priority');
 
-  const taskMain = createElemAttr('div', {class: 'task-main'});
+  const taskMain = createElemAttr('div', { class: 'task-main' });
   li.appendChild(taskMain);
 
-  const btnCheck = createElemAttr('button', {type: 'button', 'aria-label': 'complete-task', class: 'btn-check'});
+  const btnCheck = createElemAttr('button', {
+    type: 'button',
+    'aria-label': 'complete-task',
+    class: 'btn-check',
+  });
   const iconCheck = createElemAttr('i', { class: 'fas fa-check' });
   btnCheck.appendChild(iconCheck);
 
-  taskMain.appendChild(btnCheck);  
-
   const taskTitle = document.createElement('span');
   taskTitle.textContent = task.title;
-  taskMain.appendChild(taskTitle);
+
+  taskMain.append(btnCheck, taskTitle);
 
   if (viewType === 'project') {
-    const dateSpan = createElemAttr('span', {class: 'due-date'});
+    const dateSpan = createElemAttr('span', { class: 'due-date' });
     taskMain.appendChild(dateSpan);
     displayDate(task, dateSpan);
   } else {
-    const projectName = createElemAttr('p', {class: 'project-name'});
-    projectName.append(createElemAttr('i', {class: 'fas fa-square'}), project.title);
+    const projectName = createElemAttr('p', { class: 'project-name' });
+    projectName.append(createElemAttr('i', { class: 'fas fa-square' }), project.title);
     li.appendChild(projectName);
   }
 
-  const taskExtension = createElemAttr('div', {class: 'task-extension'});
+  const taskExtension = createElemAttr('div', { class: 'task-extension' });
   li.appendChild(taskExtension);
 
   const notes = document.createElement('p');
   notes.textContent = task.notes;
-  taskExtension.appendChild(notes);  
 
-  const taskOptions = createElemAttr('div', {class: 'task-options'});
-  taskExtension.appendChild(taskOptions);
+  const taskOptions = createElemAttr('div', { class: 'task-options' });
 
-  const datePicker = createElemAttr('div', {class: 'flatpickr'});
+  taskExtension.append(notes, taskOptions);
+
+  const datePicker = createElemAttr('div', { class: 'flatpickr' });
   taskOptions.appendChild(datePicker);
 
-  const btnCalendar = createElemAttr('button', {type: 'button', class: 'input-button task-option', title: 'toggle',
-      'aria-label': 'toggle-calendar', 'data-toggle': ''});
-  btnCalendar.appendChild(createElemAttr('i', {class: 'far fa-calendar-alt'}));
-  datePicker.appendChild(btnCalendar);  
+  const btnCalendar = createElemAttr('button', {
+    type: 'button',
+    class: 'input-button task-option',
+    title: 'toggle',
+    'aria-label': 'toggle-calendar',
+    'data-toggle': '',
+  });
+  btnCalendar.appendChild(createElemAttr('i', { class: 'far fa-calendar-alt' }));
+  datePicker.appendChild(btnCalendar);
 
-  const label = createElemAttr('label', {class: 'visuallyhidden'});
+  const label = createElemAttr('label', { class: 'visuallyhidden' });
   label.textContent = 'When';
   datePicker.appendChild(label);
 
-  const dateInput = createElemAttr('input', {type: 'text', class: 'visuallyhidden', placeholder: 'When', 'data-input': ''});
+  const dateInput = createElemAttr('input', {
+    type: 'text',
+    class: 'visuallyhidden',
+    placeholder: 'When',
+    'data-input': '',
+  });
   label.appendChild(dateInput);
 
   initFlatpickr(datePicker, task, li, viewType);
 
-  const btnPriority = createElemAttr('button', {type: 'button', class: 'task-option', 'aria-label': 'set-priority'});
+  const btnPriority = createElemAttr('button', {
+    type: 'button',
+    class: 'task-option',
+    'aria-label': 'set-priority',
+  });
   if (task.priority) btnPriority.classList.add('active');
-  btnPriority.appendChild(createElemAttr('i', {class: 'fas fa-flag'}));
-  taskOptions.appendChild(btnPriority);  
+  btnPriority.appendChild(createElemAttr('i', { class: 'fas fa-flag' }));
+  taskOptions.appendChild(btnPriority);
 
-  const btnEdit = createElemAttr('button', {type: 'button', class: 'task-option', 'aria-label': 'edit-task'});
-  btnEdit.appendChild(createElemAttr('i', { class: 'fas fa-edit'}));
+  const btnEdit = createElemAttr('button', {
+    type: 'button',
+    class: 'task-option',
+    'aria-label': 'edit-task',
+  });
+  btnEdit.appendChild(createElemAttr('i', { class: 'fas fa-edit' }));
   taskOptions.appendChild(btnEdit);
 
-  const btnDelete = createElemAttr('button', {type: 'button', class: 'task-option', 'aria-label': 'delete-task'});
-  btnDelete.appendChild(createElemAttr('i', {class: 'fas fa-trash-alt'}));
+  const btnDelete = createElemAttr('button', {
+    type: 'button',
+    class: 'task-option',
+    'aria-label': 'delete-task',
+  });
+  btnDelete.appendChild(createElemAttr('i', { class: 'fas fa-trash-alt' }));
   taskOptions.appendChild(btnDelete);
 
   // Add event listeners
@@ -81,23 +111,23 @@ function createTaskLi(task, project, viewType) {
 
   iconCheck.addEventListener('animationend', () => iconCheck.style['animation-name'] = 'none');
 
-  btnCheck.addEventListener('click', function(e) {
+  btnCheck.addEventListener('click', (e) => {
     e.stopPropagation();
     handleCheck(li, task, project, viewType);
   });
 
   btnCalendar.addEventListener('click', (e) => e.stopPropagation());
 
-  btnPriority.addEventListener('click', function(e) { handlePriority(e, task, this, li) });
+  btnPriority.addEventListener('click', (e) => handlePriority(e, task, btnPriority, li));
 
-  btnEdit.addEventListener('click', (e) => { 
+  btnEdit.addEventListener('click', (e) => {
     e.stopPropagation();
     handleEdit(task, project, li, viewType);
   });
 
   btnDelete.addEventListener('click', (e) => {
     e.stopPropagation();
-    confirmTaskDelete(task, project, li, viewType)
+    confirmTaskDelete(task, project, li, viewType);
   });
 
   return li;
@@ -111,7 +141,7 @@ function handleExtend(e) {
     this.setAttribute('aria-expanded', 'true');
   } else {
     this.setAttribute('aria-expanded', 'false');
-  }  
+  }
 }
 
 function initFlatpickr(element, task, li, viewType) {
@@ -121,9 +151,7 @@ function initFlatpickr(element, task, li, viewType) {
     defaultDate: task.dueDate,
     minDate: 'today',
     allowInvalidPreload: true,
-    locale: {
-      firstDayOfWeek: 1,
-    },
+    locale: { firstDayOfWeek: 1 },
     appendTo: document.body.querySelector('.fp-container'),
     wrap: true,
     onChange: (selDates, dateStr) => {
@@ -169,7 +197,7 @@ function displayDate(task, element) {
 function handleCheck(li, task, project, viewType) {
   task.complete = !task.complete;
   if (task.complete) {
-    li.classList.add('checked');    
+    li.classList.add('checked');
     li.querySelector('.fa-check').style['animation-name'] = 'check';
   } else {
     li.classList.remove('checked');
@@ -243,12 +271,12 @@ function handleDeleteTask(task, project, li, viewType) {
   if (viewType === 'project') {
     setProgressDisplay(project);
     if (isDueDateToday(task.dueDate)) recalcTaskNumber(projects.findTodayTasks());
-  } 
+  }
   else if (viewType === 'today') {
     const todayProject = projects.findTodayTasks();
     setProgressDisplay(todayProject);
     recalcTaskNumber(todayProject);
-  }  
+  }
   else if (viewType === 'upcoming') {
     return loadContent(createUpcomingPage);
   }

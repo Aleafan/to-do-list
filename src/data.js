@@ -1,9 +1,9 @@
-import { uniqueId, isDueDateToday, isDueDateUpcoming, compareDates } from './helpers';
 import { add, format, sub } from 'date-fns';
+import { uniqueId, isDueDateToday, isDueDateUpcoming, compareDates } from './helpers';
 
 // Default projects declarations
 const now = Date.now();
-const today = format(now, "MMM d yyyy");
+const today = format(now, 'MMM d yyyy');
 
 const inbox = {
   id: 'inbox',
@@ -11,7 +11,7 @@ const inbox = {
   description: '',
   tasks: [
     {
-      title: 'Finish work project',
+      title: 'Finish work on project',
       notes: '',
       dueDate: today,
       priority: false,
@@ -19,15 +19,15 @@ const inbox = {
     },
     {
       title: 'Read weekly news',
-      notes: '',
-      dueDate: format(add(now, { months: 1 }), "MMM d yyyy"),
+      // notes: '',
+      dueDate: format(add(now, { months: 1 }), 'MMM d yyyy'),
       priority: false,
       complete: true,
     },
     {
       title: 'Repair the bicycle',
       notes: 'Buy a spanner size 12',
-      dueDate: format(add(now, { days: 15 }), "MMM d yyyy"),
+      dueDate: format(add(now, { days: 15 }), 'MMM d yyyy'),
       priority: false,
       complete: false,
     },
@@ -49,14 +49,14 @@ const vacation = {
     {
       title: 'Read about the metro',
       notes: 'Tickets, prices, opening times',
-      dueDate: format(add(now, { days: 8 }), "MMM d yyyy"),
+      dueDate: format(add(now, { days: 5 }), 'MMM d yyyy'),
       priority: false,
       complete: false,
     },
     {
       title: 'Buy travel guide',
       notes: 'Rough Guide is preferred',
-      dueDate: format(sub(now, { days: 3 }), "MMM d yyyy"),
+      dueDate: format(sub(now, { days: 3 }), 'MMM d yyyy'),
       priority: false,
       complete: true,
     },
@@ -78,7 +78,7 @@ const exercise = {
     {
       title: 'Practice yoga',
       notes: 'Practice yoga 3 times per week',
-      dueDate: format(add(now, { days: 1 }), "MMM d yyyy"),
+      dueDate: format(add(now, { days: 1 }), 'MMM d yyyy'),
       priority: true,
       complete: false,
     },
@@ -92,7 +92,7 @@ const exercise = {
     {
       title: 'Do back exercises',
       notes: '',
-      dueDate: format(add(now, { days: 3 }), "MMM d yyyy"),
+      dueDate: format(add(now, { days: 3 }), 'MMM d yyyy'),
       priority: false,
       complete: false,
     },
@@ -107,7 +107,7 @@ const house = {
     {
       title: 'Clean the house',
       notes: 'Once per week',
-      dueDate: format(sub(now, { days: 3 }), "MMM d yyyy"),
+      dueDate: format(sub(now, { days: 3 }), 'MMM d yyyy'),
       priority: false,
       complete: false,
     },
@@ -150,21 +150,6 @@ const grocery = {
   ],
 };
 
-// Factory functions for tasks and projects creation
-function createTask(title, notes, dueDate, priority, complete) {
-  priority = !!priority;
-  complete = !!complete;
-  const task = { title, notes, dueDate, priority, complete };
-  return task;
-}
-
-function createProject(title) {
-  const id = uniqueId();
-  const projectProps = { id, title, tasks: [] };
-  const newObject = Object.create(projProto);
-  return Object.assign(newObject, projectProps);
-}
-
 // Prototypes for each project and projects object containing their methods
 const projProto = {
   addTask(task) {
@@ -193,7 +178,7 @@ const projProto = {
   deleteCompleted() {
     this.tasks = this.tasks.filter(task => !task.complete);
   },
-}
+};
 
 const projectsProto = {
   addProject(project) {
@@ -240,7 +225,7 @@ const projectsProto = {
   },
 
   findUpcomingTasks() {
-    const upcomingTasks = this.list
+    return this.list
       .reduce((array, project) => {
         project.tasks.forEach(task => {
           if (task.dueDate && isDueDateUpcoming(task.dueDate)) {
@@ -263,10 +248,32 @@ const projectsProto = {
         return array;
       }, [])
       .sort((first, second) => compareDates(first.date, second.date));
-    return upcomingTasks;
   },
 };
 
+// Factory functions for tasks and projects creation
+function createTask(title, notes, dueDate, priority, complete) {
+  return {
+    title,
+    notes,
+    dueDate,
+    priority: !!priority,
+    complete: !!complete,
+  };
+}
+
+function createProject(title) {
+  const id = uniqueId();
+  const projectProps = {
+    id,
+    title,
+    tasks: [],
+  };
+  const newObject = Object.create(projProto);
+  return Object.assign(newObject, projectProps);
+}
+
+// Data management
 let projects;
 const defaultList = [inbox, vacation, exercise, house, grocery];
 
@@ -279,7 +286,7 @@ function prepareUsersData() {
     const newObject = Object.create(projProto);
     return Object.assign(newObject, project);
   });
-  projects = Object.assign({ list }, projectsProto);
+  projects = { list, ...projectsProto };
 }
 
 // Save data to local storage on visibilitychange to hidden, check 'pagehide' for Safari bug case
@@ -295,10 +302,10 @@ function configureDataSave() {
     if (e.type === 'visibilitychange' && document.visibilityState === 'hidden') {
       localStorage.setItem('projects', JSON.stringify(projects.list));
     }
-  }
+  };
 
   document.addEventListener('visibilitychange', handleHide);
-  window.addEventListener('pagehide', handleHide)
+  window.addEventListener('pagehide', handleHide);
 }
 
 export { projects, createTask, createProject, prepareUsersData, configureDataSave };

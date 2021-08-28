@@ -1,8 +1,9 @@
-import { projects } from "./data.js";
-import { createTaskForm, toggleTaskForm } from './taskForm.js';
-import { createElemAttr, getToday, setProgressDisplay } from './helpers.js';
-import { handleClickOverlay } from './project.js';
-import { createTaskLi } from './taskListItem.js';
+import { projects } from './data';
+import { createTaskForm, toggleTaskForm } from './taskForm';
+import { getToday } from './helpers';
+import { createTaskLi } from './taskListItem';
+import { createElemAttr, setProgressDisplay } from './domFunctions';
+import createFormOverlay from './formOverlay';
 
 function createTodayPage() {
   const todayProject = projects.findTodayTasks();
@@ -20,15 +21,15 @@ function createTodayPage() {
 
   main.appendChild(header);
 
-  const progress = createElemAttr('progress', {max: '100'});
+  const progress = createElemAttr('progress', { max: '100' });
   setProgressDisplay(todayProject, progress);
-  main.appendChild(progress); 
+  main.appendChild(progress);
 
   const taskList = createElemAttr('ul', { class: 'task-list' });
   main.appendChild(taskList);
 
   todayProject.tasks.forEach(elem => {
-    const project = projects.list.find((project) => project.id === elem.id);
+    const project = projects.list.find(proj => proj.id === elem.id);
     taskList.appendChild(createTaskLi(elem.task, project, 'today'));
   });
 
@@ -37,19 +38,16 @@ function createTodayPage() {
 
   taskFormWrapper.appendChild(createTaskForm('today'));
 
-  const btnAddTask = createElemAttr('button', {type: 'button', class: 'btn-menu btn-add'});
+  const btnAddTask = createElemAttr('button', { type: 'button', class: 'btn-menu btn-add' });
   btnAddTask.textContent = ' New task';
   taskFormWrapper.appendChild(btnAddTask);
 
-  const formOverlay = createElemAttr('div', {class: 'form-overlay'});
-  main.appendChild(formOverlay);
+  main.appendChild(createFormOverlay());
 
   // Add event listeners
-  btnAddTask.addEventListener('click', toggleTaskForm);  
-
-  formOverlay.addEventListener('click', handleClickOverlay);
+  btnAddTask.addEventListener('click', toggleTaskForm);
 
   return main;
 }
 
-export { createTodayPage };
+export default createTodayPage;

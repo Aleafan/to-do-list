@@ -1,8 +1,9 @@
-import { projects } from "./data";
-import { createElemAttr, formatDateUpcoming } from "./helpers";
-import { createTaskLi } from './taskListItem.js';
-import { createTaskForm, toggleTaskForm } from './taskForm.js';
-import { handleClickOverlay } from './project.js';
+import { projects } from './data';
+import { formatDateUpcoming } from './helpers';
+import { createTaskLi } from './taskListItem';
+import { createTaskForm, toggleTaskForm } from './taskForm';
+import { createElemAttr } from './domFunctions';
+import createFormOverlay from './formOverlay';
 
 function createUpcomingPage() {
   const main = document.createElement('main');
@@ -26,7 +27,7 @@ function createUpcomingPage() {
     article.appendChild(taskList);
 
     dateObj.tasks.forEach(taskObj => {
-      const project = projects.list.find((project) => project.id === taskObj.id);
+      const project = projects.list.find(proj => proj.id === taskObj.id);
       taskList.appendChild(createTaskLi(taskObj.task, project, 'upcoming'));
     });
   });
@@ -36,19 +37,16 @@ function createUpcomingPage() {
 
   taskFormWrapper.appendChild(createTaskForm('upcoming'));
 
-  const btnAddTask = createElemAttr('button', {type: 'button', class: 'btn-menu btn-add'});
+  const btnAddTask = createElemAttr('button', { type: 'button', class: 'btn-menu btn-add' });
   btnAddTask.textContent = ' New task';
   taskFormWrapper.appendChild(btnAddTask);
 
-  const formOverlay = createElemAttr('div', {class: 'form-overlay'});
-  main.appendChild(formOverlay);
+  main.appendChild(createFormOverlay());
 
   // Add event listeners
-  btnAddTask.addEventListener('click', toggleTaskForm);  
-
-  formOverlay.addEventListener('click', handleClickOverlay);
+  btnAddTask.addEventListener('click', toggleTaskForm);
 
   return main;
 }
 
-export { createUpcomingPage };
+export default createUpcomingPage;

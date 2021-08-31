@@ -9,10 +9,10 @@ The app is fully responsive and designed with "mobile-first" approach.
 This is a training project for The Odin Project course. 
 
 Main purpose of this project was to practice: 
-* using Webpack for bundling JS modules and assets,
-* organizing code into modules to have logical and efficient code structure,
-* work with objects for creating and manipulating data,
-* using linter and Prettier for formatting check.
+* using Webpack for bundling JS modules and assets
+* organizing code into modules to have logical and efficient code structure
+* work with objects for creating and manipulating data
+* using linter and Prettier for formatting check
 
 ## Technologies
 
@@ -27,7 +27,7 @@ Project is created with:
 * HTML
 * CSS
 
-* Page Visibility API - utilized for saving user's data before end of session in localStorage
+* Page Visibility API - utilized for saving user's data in localStorage before end of session
 
 ## Demo
 

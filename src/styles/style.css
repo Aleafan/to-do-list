@@ -1,5 +1,10 @@
 /* Global rules */
 
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('../assets/fonts/RobotoSlab-VariableFont_wght.ttf');
+}
+
 *,
 *::before,
 *::after {

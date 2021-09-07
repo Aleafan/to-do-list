@@ -300,7 +300,7 @@ function handleEditTask(form, task, project, viewType) {
       form.parentNode.replaceWith(createTaskLi(task, project, 'project'));
       setProgressDisplay(project);
     } else {
-      handleDeleteTask(task, project, form.parentNode);
+      handleDeleteTask(task, project, 'project', form.parentNode);
       newProject.addTask(task);
     }
     recalcTaskNumber(newProject);
@@ -310,7 +310,7 @@ function handleEditTask(form, task, project, viewType) {
   } 
   else if (viewType === 'today') {
     if (newProjectId !== project.id) {
-      handleDeleteTask(task, project);
+      handleDeleteTask(task, project, 'today', form.parentNode);
       newProject.addTask(task);
     }
     if (!isDueDateToday(task.dueDate)) {
@@ -324,7 +324,7 @@ function handleEditTask(form, task, project, viewType) {
   } 
   else if (viewType === 'upcoming') {
     if (newProjectId !== project.id) {
-      handleDeleteTask(task, project);
+      handleDeleteTask(task, project, 'upcoming');
       newProject.addTask(task);
     }
     recalcTaskNumber(newProject);

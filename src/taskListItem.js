@@ -260,12 +260,12 @@ function confirmTaskDelete(task, project, li, viewType) {
   confWrapper.addEventListener('click', (e) => {
     e.stopPropagation();
     if (e.target.dataset.click === 'delete') {
-      handleDeleteTask(task, project, li, viewType);
+      handleDeleteTask(task, project, viewType, li);
     } else if (e.target.dataset.click) confWrapper.remove();
   });
 }
 
-function handleDeleteTask(task, project, li, viewType) {
+function handleDeleteTask(task, project, viewType, li) {
   project.deleteTask(task);
   recalcTaskNumber(project);
   if (viewType === 'project') {
@@ -280,8 +280,11 @@ function handleDeleteTask(task, project, li, viewType) {
   else if (viewType === 'upcoming') {
     return loadContent(createUpcomingPage);
   }
-  li.querySelector('.flatpickr')._flatpickr.destroy();
-  if (li) li.remove();
+  if (li) {
+    const fpInstance = li.querySelector('.flatpickr');
+    if (fpInstance) fpInstance._flatpickr.destroy();
+    li.remove();
+  }
 }
 
 export { handleDeleteTask, createTaskLi };

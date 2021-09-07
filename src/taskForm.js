@@ -307,10 +307,10 @@ function handleEditTask(form, task, project, viewType) {
     if (isDueDateToday(prevDate) || isDueDateToday(task.dueDate)) {
       recalcTaskNumber(projects.findTodayTasks());
     }
-  } 
+  }
   else if (viewType === 'today') {
     if (newProjectId !== project.id) {
-      handleDeleteTask(task, project, 'today', form.parentNode);
+      handleDeleteTask(task, project, 'today');
       newProject.addTask(task);
     }
     if (!isDueDateToday(task.dueDate)) {
@@ -321,7 +321,7 @@ function handleEditTask(form, task, project, viewType) {
     }
     recalcTaskNumber(newProject);
     recalcTaskNumber(projects.findTodayTasks());
-  } 
+  }
   else if (viewType === 'upcoming') {
     if (newProjectId !== project.id) {
       handleDeleteTask(task, project, 'upcoming');

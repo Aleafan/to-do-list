@@ -1,5 +1,7 @@
 # To Do List App
 
+![to-do-list](https://user-images.githubusercontent.com/76619902/133405416-928e337e-1714-47f6-86e5-8fe1300f96fd.png)
+
 This is web application for organizing tasks and projects. 
 
 The app allows to create and manage tasks, group them into projects, set due date and priority level.
